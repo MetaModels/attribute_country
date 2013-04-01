@@ -10,9 +10,6 @@
  * @copyright  The MetaModels team
  * @license    LGPL
  */
-if(!defined('TL_ROOT')) {
-	die('You cannot access this file directly!');
-}
 
 class MetaModelAttributeCountry extends MetaModelAttributeSimple {
 

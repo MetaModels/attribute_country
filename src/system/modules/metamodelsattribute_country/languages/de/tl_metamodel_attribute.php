@@ -10,9 +10,6 @@
  * @copyright  The MetaModels team
  * @license    LGPL
  */
-if(!defined('TL_ROOT')) {
-	die('You cannot access this file directly!');
-}
 
 $GLOBALS['TL_LANG']['tl_metamodel_attribute']['typeOptions']['country']	= 'Land';
 $GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries'] = array('Verfügbare Länder einschränken', 'Die zur Auswahl verfügbaren Länder einschränken. Wenn keine Einschränkungen getroffen wurden, sind alle Länder verfügbar.');
