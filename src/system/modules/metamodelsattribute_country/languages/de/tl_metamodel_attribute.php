@@ -11,5 +11,7 @@
  * @license    LGPL
  */
 
-$GLOBALS['TL_LANG']['tl_metamodel_attribute']['typeOptions']['country']	= 'Land';
-$GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries'] = array('Verfügbare Länder einschränken', 'Die zur Auswahl verfügbaren Länder einschränken. Wenn keine Einschränkungen getroffen wurden, sind alle Länder verfügbar.');
+$GLOBALS['TL_LANG']['tl_metamodel_attribute']['typeOptions']['country']
+	= 'Land';
+$GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries']
+	= array('Verfügbare Länder einschränken', 'Die zur Auswahl verfügbaren Länder einschränken. Wenn keine Einschränkungen getroffen wurden, sind alle Länder verfügbar.');

@@ -11,5 +11,7 @@
  * @license    LGPL
  */
 
-$GLOBALS['TL_LANG']['tl_metamodel_attribute']['typeOptions']['country']	= 'Country';
-$GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries'] = array('Filter available countries', 'Filter the countries that will be available for selection. If none is selected, all countries will be available.');
+$GLOBALS['TL_LANG']['tl_metamodel_attribute']['typeOptions']['country']
+	= 'Country';
+$GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries']
+	= array('Filter available countries', 'Filter the countries that will be available for selection. If none is selected, all countries will be available.');
