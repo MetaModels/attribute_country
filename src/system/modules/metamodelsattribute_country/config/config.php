@@ -6,9 +6,13 @@
  * The Front-End modules allow you to build powerful listing and filtering of the
  * data in each collection.
  *
- * @author     Oliver Hoff <oliver@hofff.com>
- * @copyright  The MetaModels team
- * @license    LGPL
+ * PHP version 5
+ * @package     MetaModels
+ * @subpackage  AttributeCountry
+ * @author      Oliver Hoff <oliver@hofff.com>
+ * @copyright   The MetaModels team.
+ * @license     LGPL.
+ * @filesource
  */
 
 $GLOBALS['METAMODELS']['attributes']['country'] = array(
