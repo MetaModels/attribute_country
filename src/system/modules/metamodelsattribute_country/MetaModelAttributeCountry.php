@@ -43,7 +43,7 @@ class MetaModelAttributeCountry extends MetaModelAttributeSimple {
 		$arrFieldDef = parent::getFieldDefinition($arrOverrides);
 		$arrFieldDef['inputType'] = 'select';
 		$arrFieldDef['options'] = MetaModelController::getInstance()->getCountries();
-		$arrSelectable = (array) $this->get('countries');
+		$arrSelectable = deserialize($this->get('countries'), true);
 		$arrSelectable && $arrFieldDef['options'] = array_intersect_key(
 			$arrFieldDef['options'],
 			array_flip($arrSelectable)
