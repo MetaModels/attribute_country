@@ -54,17 +54,17 @@ class MetaModelAttributeCountry extends MetaModelAttributeSimple {
 
 	public function getCountryLabel($strCountry) {
 		$strLanguage = $this->getMetaModel()->getActiveLanguage();
-		MetaModelController::getInstance()->loadLanguageFile('languages', $strLanguage, true);
+		MetaModelController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
-		if(strlen($GLOBALS['TL_LANG']['LNG'][$strCountry])) {
-			$strLabel = $GLOBALS['TL_LANG']['LNG'][$strCountry];
+		if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry])) {
+			$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
 
 		} else {
 			$strLanguage = $this->getMetaModel()->getFallbackLanguage();
-			MetaModelController::getInstance()->loadLanguageFile('languages', $strLanguage, true);
+			MetaModelController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
-			if(strlen($GLOBALS['TL_LANG']['LNG'][$strCountry])) {
-				$strResult = $GLOBALS['TL_LANG']['LNG'][$strCountry];
+			if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry])) {
+				$strResult = $GLOBALS['TL_LANG']['CNT'][$strCountry];
 
 			} else {
 				include(TL_ROOT . '/system/config/countries.php');
@@ -74,7 +74,7 @@ class MetaModelAttributeCountry extends MetaModelAttributeSimple {
 
 		// switch back to the original FE language to not disturb the frontend.
 		if($strLanguage != $GLOBALS['TL_LANGUAGE']) {
-			MetaModelController::getInstance()->loadLanguageFile('languages', false, true);
+			MetaModelController::getInstance()->loadLanguageFile('countries', false, true);
 		}
 
 		return $strLabel;
