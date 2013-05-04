@@ -61,7 +61,7 @@
 			"transifex": {
 				"project": "metamodels",
 				"prefix": "attribute_select-",
-				"languages_cto": "src/system/modules/metamodelsattribute_select/languages",
+				"languages_cto": "src/system/modules/metamodelsattribute_country/languages",
 				"languages_tx": ".tx"
 			}
 		}
