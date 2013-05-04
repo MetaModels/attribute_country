@@ -60,7 +60,7 @@
 			},
 			"transifex": {
 				"project": "metamodels",
-				"prefix": "attribute_select-",
+				"prefix": "attribute_country-",
 				"languages_cto": "src/system/modules/metamodelsattribute_country/languages",
 				"languages_tx": ".tx"
 			}
