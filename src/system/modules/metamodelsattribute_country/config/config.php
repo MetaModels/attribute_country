@@ -15,7 +15,7 @@
  * @filesource
  */
 
-$GLOBALS['METAMODELS']['attributes']['country'] = array(
-	'class' => 'MetaModelAttributeCountry',
-	'image' => 'system/modules/metamodelsattribute_country/html/country.png',
-);
+$GLOBALS['METAMODELS']['attributes']['country']['class']
+	= 'MetaModelAttributeCountry';
+$GLOBALS['METAMODELS']['attributes']['country']['image']
+	= 'system/modules/metamodelsattribute_country/html/country.png';
