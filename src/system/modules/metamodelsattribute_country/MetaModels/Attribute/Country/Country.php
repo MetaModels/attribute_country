@@ -15,19 +15,39 @@
  * @filesource
  */
 
-class MetaModelAttributeCountry extends MetaModelAttributeSimple {
+namespace MetaModels\Attribute\Country;
 
-	protected function prepareTemplate(MetaModelTemplate $objTemplate, $arrRowData, $objSettings = null)
+use MetaModels\Attribute\BaseSimple;
+use MetaModels\Helper\ContaoController;
+use MetaModels\Render\Template;
+
+/**
+ * Attribute Country
+ */
+class Country extends BaseSimple
+{
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function prepareTemplate(Template $objTemplate, $arrRowData, $objSettings = null)
 	{
 		parent::prepareTemplate($objTemplate, $arrRowData, $objSettings);
 		$objTemplate->value = $this->getCountryLabel($arrRowData[$this->getColName()]);
 	}
 
-	public function getSQLDataType() {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getSQLDataType()
+	{
 		return 'varchar(2) NOT NULL default \'\'';
 	}
 
-	public function getAttributeSettingNames() {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getAttributeSettingNames()
+	{
 		return array_merge(parent::getAttributeSettingNames(), array(
 			'countries',
 			'filterable',
@@ -39,10 +59,14 @@ class MetaModelAttributeCountry extends MetaModelAttributeSimple {
 		));
 	}
 
-	public function getFieldDefinition($arrOverrides = array()) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getFieldDefinition($arrOverrides = array())
+	{
 		$arrFieldDef = parent::getFieldDefinition($arrOverrides);
 		$arrFieldDef['inputType'] = 'select';
-		$arrFieldDef['options'] = MetaModelController::getInstance()->getCountries();
+		$arrFieldDef['options'] = ContaoController::getInstance()->getCountries();
 		$arrSelectable = deserialize($this->get('countries'), true);
 		$arrSelectable && $arrFieldDef['options'] = array_intersect_key(
 			$arrFieldDef['options'],
@@ -52,29 +76,39 @@ class MetaModelAttributeCountry extends MetaModelAttributeSimple {
 		return $arrFieldDef;
 	}
 
-	public function getCountryLabel($strCountry) {
+	/**
+	 * Retrieve the label for a given country.
+	 *
+	 * @param string $strCountry The country for which the label shall be retrieved.
+	 *
+	 * @return string
+	 */
+	public function getCountryLabel($strCountry)
+	{
 		$strLanguage = $this->getMetaModel()->getActiveLanguage();
-		MetaModelController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
+		ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
-		if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry])) {
+		if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
+		{
 			$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
 
 		} else {
 			$strLanguage = $this->getMetaModel()->getFallbackLanguage();
-			MetaModelController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
+			ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
-			if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry])) {
-				$strResult = $GLOBALS['TL_LANG']['CNT'][$strCountry];
-
+			if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
+			{
+				$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
 			} else {
 				include(TL_ROOT . '/system/config/countries.php');
-				$strResult = $countries[$strCountry];
+				$strLabel = $countries[$strCountry];
 			}
 		}
 
 		// switch back to the original FE language to not disturb the frontend.
-		if($strLanguage != $GLOBALS['TL_LANGUAGE']) {
-			MetaModelController::getInstance()->loadLanguageFile('countries', false, true);
+		if($strLanguage != $GLOBALS['TL_LANGUAGE'])
+		{
+			ContaoController::getInstance()->loadLanguageFile('countries', false, true);
 		}
 
 		return $strLabel;

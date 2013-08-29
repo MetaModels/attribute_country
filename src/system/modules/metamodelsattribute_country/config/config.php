@@ -15,9 +15,10 @@
  * @filesource
  */
 
-$GLOBALS['METAMODELS']['attributes']['country']['class']
-	= 'MetaModelAttributeCountry';
-$GLOBALS['METAMODELS']['attributes']['country']['image']
-	= 'system/modules/metamodelsattribute_country/html/country.png';
-$GLOBALS['METAMODELS']['filters']['select']['attr_filter'][]
-	= 'country';
+$GLOBALS['METAMODELS']['attributes']['country']['class']     = 'MetaModels\Attribute\Country\Country';
+$GLOBALS['METAMODELS']['attributes']['country']['image']     = 'system/modules/metamodelsattribute_country/html/country.png';
+$GLOBALS['METAMODELS']['filters']['select']['attr_filter'][] = 'country';
+
+// non composerized Contao 2.X autoload support.
+$GLOBALS['MM_AUTOLOAD'][] = dirname(__DIR__);
+$GLOBALS['MM_AUTOLOAD'][] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'deprecated';

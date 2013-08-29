@@ -21,7 +21,10 @@
  */
 ClassLoader::addClasses(array
 (
-	'MetaModelAttributeCountry'              => 'system/modules/metamodelsattribute_country/MetaModelAttributeCountry.php',
+	'MetaModels\Attribute\Country\Country'              => 'system/modules/metamodelsattribute_country/MetaModels/Attribute/Country/Country.php',
+
+	// Backwards compatibility layer from here on. DEPRECATED only, DO NOT USE.
+	'MetaModelAttributeCountry'              => 'system/modules/metamodelsattribute_country/deprecated/MetaModelAttributeCountry.php',
 ));
 
 
