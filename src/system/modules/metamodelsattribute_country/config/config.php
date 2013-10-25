@@ -15,9 +15,6 @@
  * @filesource
  */
 
-$GLOBALS['METAMODELS']['attributes']['country']['class']
-	= 'MetaModelAttributeCountry';
-$GLOBALS['METAMODELS']['attributes']['country']['image']
-	= 'system/modules/metamodelsattribute_country/html/country.png';
-$GLOBALS['METAMODELS']['filters']['select']['attr_filter'][]
-	= 'country';
+$GLOBALS['METAMODELS']['attributes']['country']['class'] = 'MetaModelAttributeCountry';
+$GLOBALS['METAMODELS']['attributes']['country']['image'] = 'system/modules/metamodelsattribute_country/html/country.png';
+$GLOBALS['METAMODELS']['filters']['select']['attr_filter'][] = 'country';
