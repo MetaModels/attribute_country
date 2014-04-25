@@ -114,4 +114,18 @@ class Country extends BaseSimple
 		return $strLabel;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getFilterOptions($arrIds, $usedOnly, &$arrCount = null)
+	{
+		$options = parent::getFilterOptions($arrIds, $usedOnly, $arrCount);
+
+		foreach ($options as $k => $v)
+		{
+			$options[$k] = $this->getCountryLabel($k);
+		}
+
+		return $options;
+	}
 }
