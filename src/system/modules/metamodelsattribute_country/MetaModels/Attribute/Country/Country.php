@@ -64,15 +64,17 @@ class Country extends BaseSimple
 	 */
 	public function getFieldDefinition($arrOverrides = array())
 	{
-		$arrFieldDef = parent::getFieldDefinition($arrOverrides);
-		$arrFieldDef['inputType'] = 'select';
-		$arrFieldDef['options'] = ContaoController::getInstance()->getCountries();
-		$arrSelectable = deserialize($this->get('countries'), true);
+		$arrFieldDef                   = parent::getFieldDefinition($arrOverrides);
+		$arrFieldDef['inputType']      = 'select';
+		$arrFieldDef['eval']['chosen'] = true;
+		$arrFieldDef['options']        = ContaoController::getInstance()->getCountries();
+
+		$arrSelectable                            = deserialize($this->get('countries'), true);
 		$arrSelectable && $arrFieldDef['options'] = array_intersect_key(
 			$arrFieldDef['options'],
 			array_flip($arrSelectable)
 		);
-		$arrFieldDef['eval']['chosen'] = true;
+
 		return $arrFieldDef;
 	}
 
@@ -88,25 +90,31 @@ class Country extends BaseSimple
 		$strLanguage = $this->getMetaModel()->getActiveLanguage();
 		ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
-		if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
+		if (strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
 		{
 			$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
 
-		} else {
+		}
+		else
+		{
 			$strLanguage = $this->getMetaModel()->getFallbackLanguage();
 			ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
-			if(strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
+			if (strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
 			{
 				$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
-			} else {
+			}
+			else
+			{
+				// @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
 				include(TL_ROOT . '/system/config/countries.php');
 				$strLabel = $countries[$strCountry];
+				// @codingStandardsIgnoreEnd
 			}
 		}
 
-		// switch back to the original FE language to not disturb the frontend.
-		if($strLanguage != $GLOBALS['TL_LANGUAGE'])
+		// Switch back to the original FE language to not disturb the frontend.
+		if ($strLanguage != $GLOBALS['TL_LANGUAGE'])
 		{
 			ContaoController::getInstance()->loadLanguageFile('countries', false, true);
 		}
