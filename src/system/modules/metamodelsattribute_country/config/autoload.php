@@ -17,18 +17,6 @@
  */
 
 /**
- * Register the classes
- */
-ClassLoader::addClasses(array
-(
-	'MetaModels\Attribute\Country\Country'              => 'system/modules/metamodelsattribute_country/MetaModels/Attribute/Country/Country.php',
-
-	// Backwards compatibility layer from here on. DEPRECATED only, DO NOT USE.
-	'MetaModelAttributeCountry'              => 'system/modules/metamodelsattribute_country/deprecated/MetaModelAttributeCountry.php',
-));
-
-
-/**
  * Register the templates
  */
 TemplateLoader::addFiles(array
