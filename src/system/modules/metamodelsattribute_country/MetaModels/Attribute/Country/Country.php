@@ -64,6 +64,7 @@ class Country extends BaseSimple
 	 */
 	public function getFieldDefinition($arrOverrides = array())
 	{
+		// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
 		$arrFieldDef                   = parent::getFieldDefinition($arrOverrides);
 		$arrFieldDef['inputType']      = 'select';
 		$arrFieldDef['eval']['chosen'] = true;
@@ -88,6 +89,7 @@ class Country extends BaseSimple
 	public function getCountryLabel($strCountry)
 	{
 		$strLanguage = $this->getMetaModel()->getActiveLanguage();
+		// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
 		ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
 		if (strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
@@ -98,6 +100,7 @@ class Country extends BaseSimple
 		else
 		{
 			$strLanguage = $this->getMetaModel()->getFallbackLanguage();
+			// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
 			ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
 
 			if (strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
@@ -116,6 +119,7 @@ class Country extends BaseSimple
 		// Switch back to the original FE language to not disturb the frontend.
 		if ($strLanguage != $GLOBALS['TL_LANGUAGE'])
 		{
+			// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
 			ContaoController::getInstance()->loadLanguageFile('countries', false, true);
 		}
 
