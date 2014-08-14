@@ -17,8 +17,9 @@
 
 namespace MetaModels\Attribute\Country;
 
+use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
+use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use MetaModels\Attribute\BaseSimple;
-use MetaModels\Helper\ContaoController;
 use MetaModels\Render\Template;
 
 /**
@@ -60,15 +61,117 @@ class Country extends BaseSimple
 	}
 
 	/**
+	 * Include the TL_ROOT/system/config/countries.php file and return the contained $countries variable.
+	 *
+	 * @return string[]
+	 */
+	protected function getRealCountries()
+	{
+		// @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
+		include(TL_ROOT . '/system/config/countries.php');
+		// @codingStandardsIgnoreEnd
+
+		/** @var string[] $countries */
+		return $countries;
+	}
+
+	/**
+	 * Retrieve all country names in the given language.
+	 *
+	 * @param string $language The language key.
+	 *
+	 * @return string[]
+	 */
+	protected function getCountryNames($language)
+	{
+		$dispatcher = $GLOBALS['container']['event-dispatcher'];
+		/** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+		$event = new LoadLanguageFileEvent('countries', $language, true);
+		$dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+
+		return $GLOBALS['TL_LANG']['CNT'];
+	}
+
+	/**
+	 * Retrieve all country names.
+	 *
+	 * This method takes the fallback language into account.
+	 *
+	 * @return string[]
+	 */
+	protected function getCountries()
+	{
+		$loadedLanguage = $this->getMetaModel()->getActiveLanguage();
+		$languageValues = $this->getCountryNames($loadedLanguage);
+		$countries      = $this->getRealCountries();
+		$keys           = array_keys($countries);
+		$aux            = array();
+		$real           = array();
+
+		// Fetch real language values.
+		foreach ($keys as $key)
+		{
+			if (isset($languageValues[$key]))
+			{
+				$aux[$key]  = utf8_romanize($languageValues[$key]);
+				$real[$key] = $languageValues[$key];
+			}
+		}
+
+		// Add needed fallback values.
+		$keys = array_diff($keys, array_keys($aux));
+		if ($keys)
+		{
+			$loadedLanguage = $this->getMetaModel()->getFallbackLanguage();
+			$fallbackValues = $this->getCountryNames($loadedLanguage);
+			foreach ($keys as $key)
+			{
+				if (isset($fallbackValues[$key]))
+				{
+					$aux[$key]  = utf8_romanize($fallbackValues[$key]);
+					$real[$key] = $fallbackValues[$key];
+				}
+			}
+		}
+
+		$keys = array_diff($keys, array_keys($aux));
+		if ($keys)
+		{
+			foreach ($keys as $key)
+			{
+				$aux[$key]  = $countries[$key];
+				$real[$key] = $countries[$key];
+			}
+		}
+
+		asort($aux);
+		$return = array();
+		foreach (array_keys($aux) as $key)
+		{
+			$return[$key] = $real[$key];
+		}
+
+		// Switch back to the original FE language to not disturb the frontend.
+		if ($loadedLanguage != $GLOBALS['TL_LANGUAGE'])
+		{
+			$dispatcher = $GLOBALS['container']['event-dispatcher'];
+			$event      = new LoadLanguageFileEvent('countries', null, true);
+			/** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+			$dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+		}
+
+		return $return;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function getFieldDefinition($arrOverrides = array())
 	{
-		// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
 		$arrFieldDef                   = parent::getFieldDefinition($arrOverrides);
 		$arrFieldDef['inputType']      = 'select';
 		$arrFieldDef['eval']['chosen'] = true;
-		$arrFieldDef['options']        = ContaoController::getInstance()->getCountries();
+		$arrFieldDef['options']        = $this->getCountries();
 
 		$arrSelectable                            = deserialize($this->get('countries'), true);
 		$arrSelectable && $arrFieldDef['options'] = array_intersect_key(
@@ -88,42 +191,9 @@ class Country extends BaseSimple
 	 */
 	public function getCountryLabel($strCountry)
 	{
-		$strLanguage = $this->getMetaModel()->getActiveLanguage();
-		// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
-		ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
+		$countries = $this->getCountries();
 
-		if (strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
-		{
-			$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
-
-		}
-		else
-		{
-			$strLanguage = $this->getMetaModel()->getFallbackLanguage();
-			// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
-			ContaoController::getInstance()->loadLanguageFile('countries', $strLanguage, true);
-
-			if (strlen($GLOBALS['TL_LANG']['CNT'][$strCountry]))
-			{
-				$strLabel = $GLOBALS['TL_LANG']['CNT'][$strCountry];
-			}
-			else
-			{
-				// @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
-				include(TL_ROOT . '/system/config/countries.php');
-				$strLabel = $countries[$strCountry];
-				// @codingStandardsIgnoreEnd
-			}
-		}
-
-		// Switch back to the original FE language to not disturb the frontend.
-		if ($strLanguage != $GLOBALS['TL_LANGUAGE'])
-		{
-			// FIXME: remove dependency on deprecated \MetaModels\Helper\ContaoController.
-			ContaoController::getInstance()->loadLanguageFile('countries', false, true);
-		}
-
-		return $strLabel;
+		return $countries[$strCountry];
 	}
 
 	/**
