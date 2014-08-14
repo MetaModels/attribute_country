@@ -31,6 +31,13 @@ class TranslatedCountryTest extends TestCase
 	 */
 	public function testNormal()
 	{
+		if (version_compare(PHP_VERSION, '5.4', '<'))
+		{
+			$this->markTestSkipped('Invalid test case for PHP 5.3');
+
+			return;
+		}
+
 		$GLOBALS['container']['event-dispatcher'] = new EventDispatcher();
 		$GLOBALS['TL_LANGUAGE'] = $GLOBALS['CURRENT_LANGUAGE'] = 'a';
 
