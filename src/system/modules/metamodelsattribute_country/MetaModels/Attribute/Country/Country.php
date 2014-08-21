@@ -28,6 +28,13 @@ use MetaModels\Render\Template;
 class Country extends BaseSimple
 {
 	/**
+	 * Local lookup cache for country names in a given language.
+	 *
+	 * @var array
+	 */
+	protected $countryCache = array();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	protected function prepareTemplate(Template $objTemplate, $arrRowData, $objSettings = null)
@@ -102,6 +109,11 @@ class Country extends BaseSimple
 	protected function getCountries()
 	{
 		$loadedLanguage = $this->getMetaModel()->getActiveLanguage();
+		if (isset($this->countryCache[$loadedLanguage]))
+		{
+			return $this->countryCache[$loadedLanguage];
+		}
+
 		$languageValues = $this->getCountryNames($loadedLanguage);
 		$countries      = $this->getRealCountries();
 		$keys           = array_keys($countries);
@@ -159,6 +171,8 @@ class Country extends BaseSimple
 			/** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
 			$dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
 		}
+
+		$this->countryCache[$loadedLanguage] = $return;
 
 		return $return;
 	}
