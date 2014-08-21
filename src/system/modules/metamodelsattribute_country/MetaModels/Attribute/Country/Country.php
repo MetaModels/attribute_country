@@ -100,6 +100,23 @@ class Country extends BaseSimple
 	}
 
 	/**
+	 * Restore the normal language values.
+	 *
+	 * @return void
+	 */
+	protected function restoreLanguage()
+	{
+		// Switch back to the original FE language to not disturb the frontend.
+		if ($this->getMetaModel()->getActiveLanguage() != $GLOBALS['TL_LANGUAGE'])
+		{
+			$dispatcher = $GLOBALS['container']['event-dispatcher'];
+			$event      = new LoadLanguageFileEvent('countries', null, true);
+			/** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+			$dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+		}
+	}
+
+	/**
 	 * Retrieve all country names.
 	 *
 	 * This method takes the fallback language into account.
@@ -163,14 +180,7 @@ class Country extends BaseSimple
 			$return[$key] = $real[$key];
 		}
 
-		// Switch back to the original FE language to not disturb the frontend.
-		if ($loadedLanguage != $GLOBALS['TL_LANGUAGE'])
-		{
-			$dispatcher = $GLOBALS['container']['event-dispatcher'];
-			$event      = new LoadLanguageFileEvent('countries', null, true);
-			/** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
-			$dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
-		}
+		$this->restoreLanguage();
 
 		$this->countryCache[$loadedLanguage] = $return;
 
