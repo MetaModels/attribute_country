@@ -207,7 +207,7 @@ class Country extends BaseSimple
 	{
 		$countries = $this->getCountries();
 
-		return $countries[$strCountry];
+		return isset($countries[$strCountry]) ? $countries[$strCountry] : null;
 	}
 
 	/**
