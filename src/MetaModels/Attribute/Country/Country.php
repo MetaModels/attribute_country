@@ -79,6 +79,8 @@ class Country extends BaseSimple
      * Include the TL_ROOT/system/config/countries.php file and return the contained $countries variable.
      *
      * @return string[]
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function getRealCountries()
     {
@@ -95,6 +97,9 @@ class Country extends BaseSimple
      * @param string $language The language key.
      *       
      * @return string[]
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     protected function getCountryNames($language)
     {
@@ -110,6 +115,9 @@ class Country extends BaseSimple
      * Restore the normal language values.
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     protected function restoreLanguage()
     {
@@ -218,6 +226,8 @@ class Country extends BaseSimple
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function getFilterOptions($arrIds, $usedOnly, &$arrCount = null)
     {
