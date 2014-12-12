@@ -136,6 +136,8 @@ class Country extends BaseSimple
      * This method takes the fallback language into account.
      *
      * @return string[]
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function getCountries()
     {
