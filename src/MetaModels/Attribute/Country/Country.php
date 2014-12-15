@@ -8,7 +8,7 @@
  * PHP version 5
  * 
  * @package     MetaModels
- * @subpackage  AttributeColor
+ * @subpackage  AttributeCountry
  * @author      Oliver Hoff <oliver@hofff.com>
  * @author      Cliff Parnitzky <github@cliff-parnitzky.de>
  * @copyright   The MetaModels team.
