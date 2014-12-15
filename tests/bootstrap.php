@@ -10,6 +10,7 @@
  * @package     MetaModels
  * @subpackage  Tests
  * @author      Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author      Cliff Parnitzky <github@cliff-parnitzky.de>
  * @copyright   The MetaModels team.
  * @license     LGPL.
  * @filesource
@@ -22,11 +23,13 @@ function includeIfExists($file)
 }
 
 if (
-// Locally installed dependencies
-(!$loader = includeIfExists(__DIR__ . '/../vendor/autoload.php')) && 
-// We are within an composer install.
-(!$loader = includeIfExists(__DIR__ . '/../../../autoload.php'))) {
-    echo 'You must set up the project dependencies, run the following commands:' . PHP_EOL . 'curl -sS https://getcomposer.org/installer | php' . PHP_EOL . 'php composer.phar install' . PHP_EOL;
+    // Locally installed dependencies.
+    (!$loader = includeIfExists(__DIR__.'/../vendor/autoload.php'))
+    // We are within an composer install.
+    && (!$loader = includeIfExists(__DIR__.'/../../../autoload.php'))) {
+    echo 'You must set up the project dependencies, run the following commands:'.PHP_EOL.
+        'curl -sS https://getcomposer.org/installer | php'.PHP_EOL.
+        'php composer.phar install'.PHP_EOL;
     exit(1);
 }
 
