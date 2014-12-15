@@ -26,8 +26,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 /**
  * Unit tests to test class Country.
  */
-class TranslatedCountryTest extends TestCase {
-
+class CountryTest extends \PHPUnit_Framework_TestCase
+{
     protected static $languageValues = array(
         'base' => array(
             'a' => 'A in base file',
@@ -42,6 +42,40 @@ class TranslatedCountryTest extends TestCase {
             'b' => 'B in language b' 
         ) 
     );
+    
+    /**
+     * Mock a MetaModel.
+     *
+     * @param string $language         The language.
+     * @param string $fallbackLanguage The fallback language.
+     *
+     * @return IMetaModel
+     */
+    protected function mockMetaModel($language, $fallbackLanguage)
+    {
+        $metaModel = $this->getMock(
+            'MetaModels\MetaModel',
+            array(),
+            array(array())
+        );
+
+        $metaModel
+            ->expects($this->any())
+            ->method('getTableName')
+            ->will($this->returnValue('mm_unittest'));
+
+        $metaModel
+            ->expects($this->any())
+            ->method('getActiveLanguage')
+            ->will($this->returnValue($language));
+
+        $metaModel
+            ->expects($this->any())
+            ->method('getFallbackLanguage')
+            ->will($this->returnValue($fallbackLanguage));
+
+        return $metaModel;
+    }
 
     /**
      * Test a literal query.
