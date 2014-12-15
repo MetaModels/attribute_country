@@ -10,6 +10,7 @@
  * @package     MetaModels
  * @subpackage  AttributeColor
  * @author      Oliver Hoff <oliver@hofff.com>
+ * @author      Cliff Parnitzky <github@cliff-parnitzky.de>
  * @copyright   The MetaModels team.
  * @license     LGPL.
  * @filesource
