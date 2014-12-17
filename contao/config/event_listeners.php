@@ -33,8 +33,9 @@ return array
             function (CreateFilterSettingFactoryEvent $event) {
                 $factory = $event->getFactory();
                 $factory->getTypeFactory('select')->addKnownAttributeType('country');
-            }),
+            },
             // Low priority to have filter factory instantiated before we want to populate it.
             - 200
-    ),
+        )
+    )
 );
