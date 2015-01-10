@@ -31,10 +31,12 @@ return array
     MetaModelsEvents::FILTER_SETTING_FACTORY_CREATE => array(
         array(
             function (CreateFilterSettingFactoryEvent $event) {
-                $factory = $event->getFactory();
-                $factory->getTypeFactory('select')->addKnownAttributeType('country');
+                $selectFilterFactory = $event->getFactory()->getTypeFactory('select');
+                if ($selectFilterFactory) {
+                    $selectFilterFactory->addKnownAttributeType('country');
+                }
             },
-            // Low priority to have filter factory instantiated before we want to populate it.
+            // Low priority to have select filter factory instantiated before we want to populate it.
             - 200
         )
     )
