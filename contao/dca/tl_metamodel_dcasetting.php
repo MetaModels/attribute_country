@@ -22,18 +22,16 @@ $GLOBALS['TL_DCA']['tl_metamodel_dcasetting']['metasubselectpalettes']['attr_id'
 (
     'presentation' => array
     (
-        'tl_class' 
+        'tl_class'
     ),
     'functions' => array
     (
         'mandatory',
-        'includeBlankOption' 
+        'includeBlankOption'
     ),
     'overview' => array
     (
         'filterable',
         'searchable',
-        'sortable',
-        'flag' 
-    ) 
+    )
 );
