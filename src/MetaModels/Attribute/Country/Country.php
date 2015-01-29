@@ -86,7 +86,7 @@ class Country extends BaseSimple
         // @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
         include (TL_ROOT . '/system/config/countries.php');
         // @codingStandardsIgnoreEnd
-        
+        /** @var string[] $countries */
         return $countries;
     }
 
