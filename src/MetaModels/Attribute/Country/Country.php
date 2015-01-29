@@ -229,9 +229,9 @@ class Country extends BaseSimple
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function getFilterOptions($arrIds, $usedOnly, &$arrCount = null)
+    public function getFilterOptions($idList, $usedOnly, &$arrCount = null)
     {
-        $options = parent::getFilterOptions($arrIds, $usedOnly, $arrCount);
+        $options = parent::getFilterOptions($idList, $usedOnly, $arrCount);
 
         foreach ($options as $k => $v) {
             $options[$k] = $this->getCountryLabel($k);
