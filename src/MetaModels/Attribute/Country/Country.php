@@ -32,7 +32,6 @@ use MetaModels\Render\Template;
  */
 class Country extends BaseSimple
 {
-
     /**
      * Local lookup cache for country names in a given language.
      *
@@ -94,7 +93,7 @@ class Country extends BaseSimple
      * Retrieve all country names in the given language.
      *
      * @param string $language The language key.
-     *       
+     *
      * @return string[]
      *
      * @SuppressWarnings(PHPMD.Superglobals)
@@ -103,10 +102,10 @@ class Country extends BaseSimple
     protected function getCountryNames($language)
     {
         $dispatcher = $GLOBALS['container']['event-dispatcher'];
-        
+
         $event = new LoadLanguageFileEvent('countries', $language, true);
         $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
-        
+
         return $GLOBALS['TL_LANG']['CNT'];
     }
 
@@ -124,7 +123,7 @@ class Country extends BaseSimple
         if ($this->getMetaModel()->getActiveLanguage() != $GLOBALS['TL_LANGUAGE']) {
             $dispatcher = $GLOBALS['container']['event-dispatcher'];
             $event      = new LoadLanguageFileEvent('countries', null, true);
-            
+
             $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
         }
     }
@@ -144,13 +143,13 @@ class Country extends BaseSimple
         if (isset($this->countryCache[$loadedLanguage])) {
             return $this->countryCache[$loadedLanguage];
         }
-        
+
         $languageValues = $this->getCountryNames($loadedLanguage);
         $countries      = $this->getRealCountries();
         $keys           = array_keys($countries);
         $aux            = array();
         $real           = array();
-        
+
         // Fetch real language values.
         foreach ($keys as $key) {
             if (isset($languageValues[$key])) {
@@ -158,7 +157,7 @@ class Country extends BaseSimple
                 $real[$key] = $languageValues[$key];
             }
         }
-        
+
         // Add needed fallback values.
         $keys = array_diff($keys, array_keys($aux));
         if ($keys) {
@@ -171,7 +170,7 @@ class Country extends BaseSimple
                 }
             }
         }
-        
+
         $keys = array_diff($keys, array_keys($aux));
         if ($keys) {
             foreach ($keys as $key) {
@@ -179,17 +178,17 @@ class Country extends BaseSimple
                 $real[$key] = $countries[$key];
             }
         }
-        
+
         asort($aux);
         $return = array();
         foreach (array_keys($aux) as $key) {
             $return[$key] = $real[$key];
         }
-        
+
         $this->restoreLanguage();
-        
+
         $this->countryCache[$loadedLanguage] = $return;
-        
+
         return $return;
     }
 
@@ -207,7 +206,7 @@ class Country extends BaseSimple
         if ($arrSelectable) {
             $arrFieldDef['options'] = array_intersect_key($arrFieldDef['options'], array_flip($arrSelectable));
         }
-        
+
         return $arrFieldDef;
     }
 
@@ -221,7 +220,7 @@ class Country extends BaseSimple
     public function getCountryLabel($strCountry)
     {
         $countries = $this->getCountries();
-        
+
         return isset($countries[$strCountry]) ? $countries[$strCountry] : null;
     }
 
@@ -233,11 +232,11 @@ class Country extends BaseSimple
     public function getFilterOptions($arrIds, $usedOnly, &$arrCount = null)
     {
         $options = parent::getFilterOptions($arrIds, $usedOnly, $arrCount);
-        
+
         foreach ($options as $k => $v) {
             $options[$k] = $this->getCountryLabel($k);
         }
-        
+
         return $options;
     }
 }
