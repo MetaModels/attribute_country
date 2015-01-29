@@ -43,7 +43,7 @@ class Country extends BaseSimple
     /**
      * {@inheritDoc}
      */
-    protected function prepareTemplate(Template $objTemplate, $arrRowData, $objSettings = null)
+    protected function prepareTemplate(Template $objTemplate, $arrRowData, $objSettings)
     {
         parent::prepareTemplate($objTemplate, $arrRowData, $objSettings);
         $objTemplate->value = $this->getCountryLabel($arrRowData[$this->getColName()]);
