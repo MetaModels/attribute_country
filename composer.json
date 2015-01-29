@@ -37,8 +37,7 @@
     "metamodels/core": "~2.0"
   },
   "require-dev": {
-    "cyberspectrum/contao-toolbox": "dev-master",
-    "contao-community-alliance/build-system": "~1.0",
+    "cyberspectrum/contao-toolbox": "~0.6",
     "contao-community-alliance/build-system-all-tasks": "~1.0",
     "contao-community-alliance/coding-standard": "~1.0",
     "metamodels/base-unit-tests": "~1.0"
@@ -49,6 +48,11 @@
   "autoload": {
     "psr-0": {
       "MetaModels": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-0": {
+      "MetaModels\\Test": "tests"
     }
   },
   "extra": {

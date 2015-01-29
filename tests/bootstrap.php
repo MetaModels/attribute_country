@@ -33,8 +33,6 @@ if (
     exit(1);
 }
 
-$loader->add('MetaModels\Test', __DIR__);
-
 function utf8_romanize($string)
 {
     return strtoupper($string);
