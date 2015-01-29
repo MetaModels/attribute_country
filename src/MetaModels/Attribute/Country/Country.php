@@ -101,7 +101,7 @@ class Country extends BaseSimple
      */
     protected function getCountryNames($language)
     {
-        $dispatcher = $GLOBALS['container']['event-dispatcher'];
+        $dispatcher = $this->getMetaModel()->getServiceContainer()->getEventDispatcher();
 
         $event = new LoadLanguageFileEvent('countries', $language, true);
         $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
@@ -121,7 +121,7 @@ class Country extends BaseSimple
     {
         // Switch back to the original FE language to not disturb the frontend.
         if ($this->getMetaModel()->getActiveLanguage() != $GLOBALS['TL_LANGUAGE']) {
-            $dispatcher = $GLOBALS['container']['event-dispatcher'];
+            $dispatcher = $this->getMetaModel()->getServiceContainer()->getEventDispatcher();
             $event      = new LoadLanguageFileEvent('countries', null, true);
 
             $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
