@@ -68,8 +68,6 @@ class Country extends BaseSimple
                 'countries',
                 'filterable',
                 'searchable',
-                'sortable',
-                'flag',
                 'mandatory',
                 'includeBlankOption'
             )
