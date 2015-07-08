@@ -6,7 +6,7 @@
  * data in each collection.
  *
  * PHP version 5
- * 
+ *
  * @package     MetaModels
  * @subpackage  AttributeCountry
  * @author      Oliver Hoff <oliver@hofff.com>
@@ -29,6 +29,8 @@ use MetaModels\Render\Template;
  * @package    MetaModels
  * @subpackage AttributeCountry
  * @author     Oliver Hoff <oliver@hofff.com>
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Tim Becker <tb@westwerk.ac>
  */
 class Country extends BaseSimple
 {
@@ -83,7 +85,7 @@ class Country extends BaseSimple
     protected function getRealCountries()
     {
         // @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
-        include (TL_ROOT . '/system/config/countries.php');
+        include(TL_ROOT . '/system/config/countries.php');
         // @codingStandardsIgnoreEnd
         /** @var string[] $countries */
         return $countries;
@@ -122,7 +124,7 @@ class Country extends BaseSimple
         // Switch back to the original FE language to not disturb the frontend.
         if ($this->getMetaModel()->getActiveLanguage() != $GLOBALS['TL_LANGUAGE']) {
             $dispatcher = $this->getMetaModel()->getServiceContainer()->getEventDispatcher();
-            $event      = new LoadLanguageFileEvent('countries', null, true);
+            $event = new LoadLanguageFileEvent('countries', null, true);
 
             $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
         }
@@ -145,15 +147,15 @@ class Country extends BaseSimple
         }
 
         $languageValues = $this->getCountryNames($loadedLanguage);
-        $countries      = $this->getRealCountries();
-        $keys           = array_keys($countries);
-        $aux            = array();
-        $real           = array();
+        $countries = $this->getRealCountries();
+        $keys = array_keys($countries);
+        $aux = array();
+        $real = array();
 
         // Fetch real language values.
         foreach ($keys as $key) {
             if (isset($languageValues[$key])) {
-                $aux[$key]  = utf8_romanize($languageValues[$key]);
+                $aux[$key] = utf8_romanize($languageValues[$key]);
                 $real[$key] = $languageValues[$key];
             }
         }
@@ -165,7 +167,7 @@ class Country extends BaseSimple
             $fallbackValues = $this->getCountryNames($loadedLanguage);
             foreach ($keys as $key) {
                 if (isset($fallbackValues[$key])) {
-                    $aux[$key]  = utf8_romanize($fallbackValues[$key]);
+                    $aux[$key] = utf8_romanize($fallbackValues[$key]);
                     $real[$key] = $fallbackValues[$key];
                 }
             }
@@ -174,7 +176,7 @@ class Country extends BaseSimple
         $keys = array_diff($keys, array_keys($aux));
         if ($keys) {
             foreach ($keys as $key) {
-                $aux[$key]  = $countries[$key];
+                $aux[$key] = $countries[$key];
                 $real[$key] = $countries[$key];
             }
         }
@@ -197,11 +199,11 @@ class Country extends BaseSimple
      */
     public function getFieldDefinition($arrOverrides = array())
     {
-        $arrFieldDef                   = parent::getFieldDefinition($arrOverrides);
-        $arrFieldDef['inputType']      = 'select';
+        $arrFieldDef = parent::getFieldDefinition($arrOverrides);
+        $arrFieldDef['inputType'] = 'select';
         $arrFieldDef['eval']['chosen'] = true;
-        $arrFieldDef['options']        = $this->getCountries();
-        
+        $arrFieldDef['options'] = $this->getCountries();
+
         $arrSelectable = deserialize($this->get('countries'), true);
         if ($arrSelectable) {
             $arrFieldDef['options'] = array_intersect_key($arrFieldDef['options'], array_flip($arrSelectable));
@@ -214,7 +216,7 @@ class Country extends BaseSimple
      * Retrieve the label for a given country.
      *
      * @param string $strCountry The country for which the label shall be retrieved.
-     *       
+     *
      * @return string
      */
     public function getCountryLabel($strCountry)
