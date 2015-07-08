@@ -11,6 +11,8 @@
  * @subpackage  AttributeCountry
  * @author      Oliver Hoff <oliver@hofff.com>
  * @author      Cliff Parnitzky <github@cliff-parnitzky.de>
+ * @author      Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author      Tim Becker <tb@westwerk.ac>
  * @copyright   The MetaModels team.
  * @license     LGPL.
  * @filesource
@@ -28,9 +30,6 @@ use MetaModels\Render\Template;
  *
  * @package    MetaModels
  * @subpackage AttributeCountry
- * @author     Oliver Hoff <oliver@hofff.com>
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @author     Tim Becker <tb@westwerk.ac>
  */
 class Country extends BaseSimple
 {
