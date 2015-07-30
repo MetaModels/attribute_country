@@ -240,4 +240,43 @@ class Country extends BaseSimple
 
         return $options;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * This base implementation does a plain SQL sort by native value as defined by MySQL.
+     */
+    public function sortIds($idList, $strDirection)
+    {
+        $countries = $this->getCountries();
+        $metaModel = $this->getMetaModel();
+        $lookup    = $metaModel
+            ->getServiceContainer()
+            ->getDatabase()
+            ->prepare(
+                sprintf(
+                    'SELECT %1$s AS country,id FROM %2$s WHERE id IN (%3$s)',
+                    // @codingStandardsIgnoreStart
+                    $this->getColName(),           // 1
+                    $metaModel->getTableName(),    // 2
+                    $this->parameterMask($idList)  // 3
+                    // @codingStandardsIgnoreEnd
+                )
+            )
+            ->execute($idList);
+
+        $sorted = array();
+        while ($lookup->next()) {
+            $country            = isset($countries[$lookup->country]) ? $countries[$lookup->country] : $lookup->country;
+            $sorted[$country][] = $lookup->id;
+        }
+
+        if ($strDirection === 'DESC') {
+            krsort($sorted);
+        } else {
+            ksort($sorted);
+        }
+
+        return call_user_func_array('array_merge', $sorted);
+    }
 }
