@@ -1,18 +1,21 @@
 <?php
+
 /**
- * The MetaModels extension allows the creation of multiple collections of custom items,
- * each with its own unique set of selectable attributes, with attribute extendability.
- * The Front-End modules allow you to build powerful listing and filtering of the
- * data in each collection.
+ * This file is part of MetaModels/attribute_country.
  *
- * PHP version 5
+ * (c) 2012-2016 The MetaModels team.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    MetaModels
  * @subpackage Tests
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
- * @copyright  The MetaModels team.
- * @license    LGPL.
+ * @copyright  2012-2016 The MetaModels team.
+ * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
 
@@ -28,19 +31,24 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CountryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Test data.
+     *
+     * @var array
+     */
     protected static $languageValues = array(
         'base' => array(
             'a' => 'A in base file',
             'b' => 'B in base file',
-            'c' => 'C in base file' 
+            'c' => 'C in base file'
         ),
         'a' => array(
-            'a' => 'A in language a' 
+            'a' => 'A in language a'
         ),
         'b' => array(
             'a' => 'A in language b',
-            'b' => 'B in language b' 
-        ) 
+            'b' => 'B in language b'
+        )
     );
     
     /**
@@ -93,35 +101,33 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['container']['event-dispatcher'] = new EventDispatcher();
         $GLOBALS['TL_LANGUAGE'] = $GLOBALS['CURRENT_LANGUAGE'] = 'a';
         
-        $GLOBALS['container']['event-dispatcher']->addListener(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, function (LoadLanguageFileEvent $event)
-        {
-            $GLOBALS['CURRENT_LANGUAGE'] = $event->getLanguage() ? $event->getLanguage() : 'a';
-        });
+        $GLOBALS['container']['event-dispatcher']->addListener(
+            ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE,
+            function (LoadLanguageFileEvent $event) {
+                $GLOBALS['CURRENT_LANGUAGE'] = $event->getLanguage() ? $event->getLanguage() : 'a';
+            }
+        );
         
         $mockModel = $this->mockMetaModel('a', 'b');
         $attribute = $this->getMockBuilder('MetaModels\Attribute\Country\Country')->setConstructorArgs(array(
-            $mockModel 
+            $mockModel
         ))->setMethods(array(
             'getMetaModel',
             'getRealCountries',
-            'getCountryNames' 
+            'getCountryNames'
         ))->getMock();
         
         $attribute->expects($this->any())->method('getMetaModel')->will($this->returnValue($mockModel));
         
-        $attribute->expects($this->any())->method('getRealCountries')->will($this->returnCallback(function ()
-        {
+        $attribute->expects($this->any())->method('getRealCountries')->will($this->returnCallback(function () {
             return static::$languageValues['base'];
         }));
         
-        $attribute->expects($this->any())->method('getCountryNames')->will($this->returnCallback(function ($language)
-        {
+        $attribute->expects($this->any())->method('getCountryNames')->will($this->returnCallback(function ($language) {
             return static::$languageValues[$language];
         }));
         
-        /**
-         * @var $attribute Country
-         */
+        /** @var $attribute Country */
         $this->assertEquals($attribute->getCountryLabel('a'), static::$languageValues['a']['a']);
         $this->assertEquals($attribute->getCountryLabel('b'), static::$languageValues['b']['b']);
         $this->assertEquals($attribute->getCountryLabel('c'), static::$languageValues['base']['c']);

@@ -1,20 +1,23 @@
 <?php
+
 /**
- * The MetaModels extension allows the creation of multiple collections of custom items,
- * each with its own unique set of selectable attributes, with attribute extendability.
- * The Front-End modules allow you to build powerful listing and filtering of the
- * data in each collection.
+ * This file is part of MetaModels/attribute_country.
  *
- * PHP version 5
- * 
- * @package     MetaModels
- * @subpackage  AttributeCountry
- * @author      Oliver Hoff <oliver@hofff.com>
- * @author      Andreas Isaak <andy.jared@googlemail.com>
- * @author      Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @author      Cliff Parnitzky <github@cliff-parnitzky.de>
- * @copyright   The MetaModels team.
- * @license     LGPL.
+ * (c) 2012-2016 The MetaModels team.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * This project is provided in good faith and hope to be usable by anyone.
+ *
+ * @package    MetaModels
+ * @subpackage AttributeCountry
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
+ * @author     Oliver Hoff <oliver@hofff.com>
+ * @author     Andreas Isaak <andy.jared@googlemail.com>
+ * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
+ * @copyright  2012-2016 The MetaModels team.
+ * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
 
@@ -22,8 +25,8 @@ $GLOBALS['TL_DCA']['tl_metamodel_attribute']['metapalettes']['country extends _s
 (
     '+display' => array
     (
-        'countries after description' 
-    ) 
+        'countries after description'
+    )
 );
 
 $GLOBALS['TL_DCA']['tl_metamodel_attribute']['fields']['countries'] = array
@@ -37,6 +40,6 @@ $GLOBALS['TL_DCA']['tl_metamodel_attribute']['fields']['countries'] = array
         'chosen' => true,
         'alwaysSave' => true,
         'multiple' => true,
-        'style' => 'width: 100%' 
-    ) 
+        'style' => 'width: 100%'
+    )
 );
