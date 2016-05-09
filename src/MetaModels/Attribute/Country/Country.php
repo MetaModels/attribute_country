@@ -238,6 +238,9 @@ class Country extends BaseSimple
             $options[$k] = $this->getCountryLabel($k);
         }
 
+        // Sort the result, see #11
+        asort($options, SORT_LOCALE_STRING);
+
         return $options;
     }
 
