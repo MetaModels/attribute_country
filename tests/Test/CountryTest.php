@@ -25,12 +25,13 @@ namespace MetaModels\Test\Attribute\Country;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use MetaModels\Attribute\Country\Country;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Unit tests to test class Country.
  */
-class CountryTest extends \PHPUnit_Framework_TestCase
+class CountryTest extends TestCase
 {
     /**
      * Test data.

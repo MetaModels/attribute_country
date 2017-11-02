@@ -50,7 +50,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "MetaModels\\Test\\Attribute\\Country\\": "tests"
+      "MetaModels\\Test\\Attribute\\Country\\": "tests/Test"
     }
   },
   "extra": {

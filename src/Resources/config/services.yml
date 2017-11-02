@@ -1,0 +1,8 @@
+services:
+    metamodels.attribute_country.factory:
+        class: MetaModels\Attribute\Country\AttributeTypeFactory
+        arguments:
+            - '@database_connection'
+            - '@metamodels.table_manipulator'
+        tags:
+          - { name: metamodels.attribute_factory }
