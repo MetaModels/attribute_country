@@ -37,7 +37,7 @@ class AttributeTypeFactory extends AbstractAttributeTypeFactory
         parent::__construct();
 
         $this->typeName  = 'country';
-        $this->typeIcon  = 'system/modules/metamodelsattribute_country/html/country.png';
+        $this->typeIcon  = 'bundles/metamodelsattributecountry/country.png';
         $this->typeClass = 'MetaModels\Attribute\Country\Country';
     }
 }
