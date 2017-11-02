@@ -24,7 +24,9 @@ namespace MetaModels\Test\Attribute\Country;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
+use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\Country\Country;
+use MetaModels\Helper\TableManipulator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -63,11 +65,7 @@ class CountryTest extends TestCase
      */
     protected function mockMetaModel($language, $fallbackLanguage)
     {
-        $metaModel = $this->getMock(
-            'MetaModels\MetaModel',
-            array(),
-            array(array())
-        );
+        $metaModel = $this->getMockForAbstractClass('MetaModels\IMetaModel');
 
         $metaModel
             ->expects($this->any())
@@ -88,36 +86,69 @@ class CountryTest extends TestCase
     }
 
     /**
+     * Mock the database connection.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Connection
+     */
+    private function mockConnection()
+    {
+        return $this->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * Mock the table manipulator.
+     *
+     * @param Connection $connection The database connection mock.
+     *
+     * @return TableManipulator|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockTableManipulator(Connection $connection)
+    {
+        return $this->getMockBuilder(TableManipulator::class)
+            ->setConstructorArgs([$connection, []])
+            ->getMock();
+    }
+
+    /**
      * Test a literal query.
      *
      * @return void
      */
     public function testNormal()
     {
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
-            $this->markTestSkipped('Invalid test case for PHP 5.3');
-            
-            return;
-        }
-        
-        $GLOBALS['container']['event-dispatcher'] = new EventDispatcher();
         $GLOBALS['TL_LANGUAGE'] = $GLOBALS['CURRENT_LANGUAGE'] = 'a';
-        
-        $GLOBALS['container']['event-dispatcher']->addListener(
+
+        $connection  = $this->mockConnection();
+        $manipulator = $this->mockTableManipulator($connection);
+        $dispatcher  = new EventDispatcher();
+        $dispatcher->addListener(
             ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE,
             function (LoadLanguageFileEvent $event) {
                 $GLOBALS['CURRENT_LANGUAGE'] = $event->getLanguage() ? $event->getLanguage() : 'a';
             }
         );
-        
+
         $mockModel = $this->mockMetaModel('a', 'b');
-        $attribute = $this->getMockBuilder('MetaModels\Attribute\Country\Country')->setConstructorArgs(array(
-            $mockModel
-        ))->setMethods(array(
-            'getMetaModel',
-            'getRealCountries',
-            'getCountryNames'
-        ))->getMock();
+        $attribute = $this->getMockBuilder('MetaModels\Attribute\Country\Country')
+            ->setConstructorArgs(
+                array(
+                    $mockModel,
+                    [],
+                    $connection,
+                    $manipulator,
+                    $dispatcher
+                )
+            )
+            ->setMethods(
+                array(
+                'getMetaModel',
+                'getRealCountries',
+                'getCountryNames'
+                )
+            )
+            ->getMock();
         
         $attribute->expects($this->any())->method('getMetaModel')->will($this->returnValue($mockModel));
         

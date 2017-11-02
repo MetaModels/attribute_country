@@ -28,6 +28,7 @@ use MetaModels\Attribute\Country\AttributeTypeFactory;
 use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Test the attribute factory.
@@ -104,8 +105,9 @@ class CountryAttributeTypeFactoryTest extends TestCase
     {
         $connection  = $this->mockConnection();
         $manipulator = $this->mockTableManipulator($connection);
+        $dispatcher  = $this->getMockForAbstractClass(EventDispatcherInterface::class);
 
-        return array(new AttributeTypeFactory($connection, $manipulator));
+        return array(new AttributeTypeFactory($connection, $manipulator, $dispatcher));
     }
 
     /**
@@ -117,8 +119,9 @@ class CountryAttributeTypeFactoryTest extends TestCase
     {
         $connection  = $this->mockConnection();
         $manipulator = $this->mockTableManipulator($connection);
+        $dispatcher  = $this->getMockForAbstractClass(EventDispatcherInterface::class);
 
-        $factory   = new AttributeTypeFactory($connection, $manipulator);
+        $factory   = new AttributeTypeFactory($connection, $manipulator, $dispatcher);
         $attribute = $factory->createInstance(
             array(),
             $this->mockMetaModel('mm_test', 'de', 'en')
