@@ -69,5 +69,11 @@
     }
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@gitlab.com:metamodels/core.git"
+    }
+  ]
 }
