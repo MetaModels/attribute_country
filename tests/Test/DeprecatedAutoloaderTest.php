@@ -42,11 +42,11 @@ class DeprecatedAutoloaderTest extends TestCase
     ];
 
     /**
-     * Provide the country class map.
+     * Provide the alias class map.
      *
      * @return array
      */
-    public function provideCountryClassMap()
+    public function provideAliasClassMap()
     {
         $values = [];
 
@@ -58,14 +58,14 @@ class DeprecatedAutoloaderTest extends TestCase
     }
 
     /**
-     * Test if the deprecated classes are countryed to the new one.
+     * Test if the deprecated classes are aliased to the new one.
      *
      * @param string $oldClass Old class name.
      * @param string $newClass New class name.
      *
-     * @dataProvider provideCountryClassMap
+     * @dataProvider provideAliasClassMap
      */
-    public function testDeprecatedClassesAreCountryed($oldClass, $newClass)
+    public function testDeprecatedClassesAreAliased($oldClass, $newClass)
     {
         $this->assertTrue(class_exists($oldClass), sprintf('Class country "%s" is not found.', $oldClass));
 
