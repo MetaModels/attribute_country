@@ -138,7 +138,7 @@ class Country extends BaseSimple
     protected function getRealCountries()
     {
         // @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
-        include(TL_ROOT . '/system/config/countries.php');
+        include(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/config/countries.php');
         // @codingStandardsIgnoreEnd
         /** @var string[] $countries */
         return $countries;
