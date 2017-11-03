@@ -18,7 +18,7 @@
  * @filesource
  */
 
-namespace MetaModels\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

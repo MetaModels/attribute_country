@@ -20,7 +20,7 @@
  * @filesource
  */
 
-namespace MetaModels\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Attribute;
 
 use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\AbstractSimpleAttributeTypeFactory;

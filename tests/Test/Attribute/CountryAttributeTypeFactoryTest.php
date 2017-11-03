@@ -20,11 +20,12 @@
  * @filesource
  */
 
-namespace MetaModels\Test\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Test\Attribute;
 
 use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\IAttributeTypeFactory;
-use MetaModels\Attribute\Country\AttributeTypeFactory;
+use MetaModels\AttributeCountryBundle\Attribute\AttributeTypeFactory;
+use MetaModels\AttributeCountryBundle\Attribute\Country;
 use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
 use PHPUnit\Framework\TestCase;
@@ -127,6 +128,6 @@ class CountryAttributeTypeFactoryTest extends TestCase
             $this->mockMetaModel('mm_test', 'de', 'en')
         );
 
-        $this->assertInstanceOf('MetaModels\Attribute\Country\Country', $attribute);
+        $this->assertInstanceOf(Country::class, $attribute);
     }
 }

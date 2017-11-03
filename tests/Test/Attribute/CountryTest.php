@@ -20,13 +20,14 @@
  * @filesource
  */
 
-namespace MetaModels\Test\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Test\Attribute;
 
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use Doctrine\DBAL\Connection;
-use MetaModels\Attribute\Country\Country;
+use MetaModels\AttributeCountryBundle\Attribute\Country;
 use MetaModels\Helper\TableManipulator;
+use MetaModels\AttributeCountryBundle\Test\IMetaModel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -131,7 +132,7 @@ class CountryTest extends TestCase
         );
 
         $mockModel = $this->mockMetaModel('a', 'b');
-        $attribute = $this->getMockBuilder('MetaModels\Attribute\Country\Country')
+        $attribute = $this->getMockBuilder(Country::class)
             ->setConstructorArgs(
                 array(
                     $mockModel,

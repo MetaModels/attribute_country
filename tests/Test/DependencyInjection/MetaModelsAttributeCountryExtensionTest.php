@@ -18,10 +18,10 @@
  * @filesource
  */
 
-namespace MetaModels\Test\Attribute\Country\DependencyInjection;
+namespace MetaModels\AttributeCountryBundle\Test\DependencyInjection;
 
-use MetaModels\Attribute\Country\AttributeTypeFactory;
-use MetaModels\Attribute\Country\DependencyInjection\MetaModelsAttributeCountryExtension;
+use MetaModels\AttributeCountryBundle\Attribute\AttributeTypeFactory;
+use MetaModels\AttributeCountryBundle\DependencyInjection\MetaModelsAttributeCountryExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;

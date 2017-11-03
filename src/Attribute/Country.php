@@ -22,7 +22,7 @@
  * @filesource
  */
 
-namespace MetaModels\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Attribute;
 
 use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;

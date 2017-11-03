@@ -1,6 +1,6 @@
 services:
     metamodels.attribute_country.factory:
-        class: MetaModels\Attribute\Country\AttributeTypeFactory
+        class: MetaModels\AttributeCountryBundle\Attribute\AttributeTypeFactory
         arguments:
             - '@database_connection'
             - '@metamodels.table_manipulator'

@@ -18,12 +18,12 @@
  * @filesource
  */
 
-namespace MetaModels\Attribute\Country\ContaoManager;
+namespace MetaModels\AttributeCountryBundle\ContaoManager;
 
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use MetaModels\Attribute\Country\MetaModelsAttributeCountryBundle;
+use MetaModels\AttributeCountryBundle\MetaModelsAttributeCountryBundle;
 use MetaModels\CoreBundle\MetaModelsCoreBundle;
 
 /**

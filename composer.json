@@ -45,16 +45,19 @@
   },
   "autoload": {
     "psr-4": {
-      "MetaModels\\Attribute\\Country\\": "src"
-    }
+      "MetaModels\\AttributeCountryBundle\\": "src"
+    },
+    "files": [
+      "src/deprecated-autoload.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
-      "MetaModels\\Test\\Attribute\\Country\\": "tests/Test"
+      "MetaModels\\AttributeCountryBundle\\Test\\": "tests/Test"
     }
   },
   "extra": {
-    "contao-manager-plugin": "MetaModels\\Attribute\\Country\\ContaoManager\\Plugin",
+    "contao-manager-plugin": "MetaModels\\AttributeCountryBundle\\ContaoManager\\Plugin",
     "contao": {
       "transifex": {
         "project": "metamodels",
