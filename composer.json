@@ -31,15 +31,15 @@
     "source": "https://github.com/MetaModels/attribute_country"
   },
   "require": {
-    "php": ">=5.4",
+    "php": "^5.6 || ^7.0",
     "contao/core": "^3.5.5",
-    "contao-community-alliance/composer-plugin": "~2.0",
-    "metamodels/core": "~2.0"
+    "contao-community-alliance/composer-plugin": "^2.0",
+    "metamodels/core": "^2.0"
   },
   "require-dev": {
-    "cyberspectrum/contao-toolbox": "~0.6",
-    "phpcq/all-tasks": "~1.0",
-    "metamodels/base-unit-tests": "~1.0"
+    "cyberspectrum/contao-toolbox": "^0.6",
+    "phpcq/all-tasks": "^1.2",
+    "metamodels/base-unit-tests": "~1.0.4"
   },
   "autoload": {
     "psr-0": {
