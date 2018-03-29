@@ -88,7 +88,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
      */
     public function testNormal()
     {
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
+        if (\version_compare(PHP_VERSION, '5.4', '<')) {
             $this->markTestSkipped('Invalid test case for PHP 5.3');
 
             return;

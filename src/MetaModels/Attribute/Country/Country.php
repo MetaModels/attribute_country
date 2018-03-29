@@ -63,7 +63,7 @@ class Country extends BaseSimple
      */
     public function getAttributeSettingNames()
     {
-        return array_merge(
+        return \array_merge(
             parent::getAttributeSettingNames(),
             [
                 'countries',
@@ -148,32 +148,32 @@ class Country extends BaseSimple
 
         $languageValues = $this->getCountryNames($loadedLanguage);
         $countries      = $this->getRealCountries();
-        $keys           = array_keys($countries);
+        $keys           = \array_keys($countries);
         $aux            = [];
         $real           = [];
 
         // Fetch real language values.
         foreach ($keys as $key) {
             if (isset($languageValues[$key])) {
-                $aux[$key]  = utf8_romanize($languageValues[$key]);
+                $aux[$key]  = \utf8_romanize($languageValues[$key]);
                 $real[$key] = $languageValues[$key];
             }
         }
 
         // Add needed fallback values.
-        $keys = array_diff($keys, array_keys($aux));
+        $keys = \array_diff($keys, \array_keys($aux));
         if ($keys) {
             $loadedLanguage = $this->getMetaModel()->getFallbackLanguage();
             $fallbackValues = $this->getCountryNames($loadedLanguage);
             foreach ($keys as $key) {
                 if (isset($fallbackValues[$key])) {
-                    $aux[$key]  = utf8_romanize($fallbackValues[$key]);
+                    $aux[$key]  = \utf8_romanize($fallbackValues[$key]);
                     $real[$key] = $fallbackValues[$key];
                 }
             }
         }
 
-        $keys = array_diff($keys, array_keys($aux));
+        $keys = \array_diff($keys, \array_keys($aux));
         if ($keys) {
             foreach ($keys as $key) {
                 $aux[$key]  = $countries[$key];
@@ -181,9 +181,9 @@ class Country extends BaseSimple
             }
         }
 
-        asort($aux);
+        \asort($aux);
         $return = [];
-        foreach (array_keys($aux) as $key) {
+        foreach (\array_keys($aux) as $key) {
             $return[$key] = $real[$key];
         }
 
@@ -204,9 +204,9 @@ class Country extends BaseSimple
         $arrFieldDef['eval']['chosen'] = true;
         $arrFieldDef['options']        = $this->getCountries();
 
-        $arrSelectable = deserialize($this->get('countries'), true);
+        $arrSelectable = \deserialize($this->get('countries'), true);
         if ($arrSelectable) {
-            $arrFieldDef['options'] = array_intersect_key($arrFieldDef['options'], array_flip($arrSelectable));
+            $arrFieldDef['options'] = \array_intersect_key($arrFieldDef['options'], \array_flip($arrSelectable));
         }
 
         return $arrFieldDef;
@@ -240,7 +240,7 @@ class Country extends BaseSimple
         }
 
         // Sort the result, see #11
-        asort($options, SORT_LOCALE_STRING);
+        \asort($options, SORT_LOCALE_STRING);
 
         return $options;
     }
@@ -258,7 +258,7 @@ class Country extends BaseSimple
             ->getServiceContainer()
             ->getDatabase()
             ->prepare(
-                sprintf(
+                \sprintf(
                     'SELECT %1$s AS country,id FROM %2$s WHERE id IN (%3$s)',
                     // @codingStandardsIgnoreStart
                     $this->getColName(),           // 1
@@ -276,11 +276,11 @@ class Country extends BaseSimple
         }
 
         if ($strDirection === 'DESC') {
-            krsort($sorted);
+            \krsort($sorted);
         } else {
-            ksort($sorted);
+            \ksort($sorted);
         }
 
-        return call_user_func_array('array_merge', $sorted);
+        return \call_user_func_array('array_merge', $sorted);
     }
 }
