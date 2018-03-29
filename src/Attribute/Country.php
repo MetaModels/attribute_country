@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2017 The MetaModels team.
+ * (c) 2012-2018 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,7 +17,8 @@
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     Tim Becker <tb@westwerk.ac>
  * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2012-2017 The MetaModels team.
+ * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @copyright  2012-2018 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -45,7 +46,7 @@ class Country extends BaseSimple
      *
      * @var array
      */
-    protected $countryCache = array();
+    protected $countryCache = [];
 
     /**
      * Event dispatcher.
@@ -116,15 +117,15 @@ class Country extends BaseSimple
      */
     public function getAttributeSettingNames()
     {
-        return array_merge(
+        return \array_merge(
             parent::getAttributeSettingNames(),
-            array(
+            [
                 'countries',
                 'filterable',
                 'searchable',
                 'mandatory',
                 'includeBlankOption'
-            )
+            ]
         );
     }
 
@@ -197,9 +198,9 @@ class Country extends BaseSimple
 
         $languageValues = $this->getCountryNames($loadedLanguage);
         $countries      = $this->getRealCountries();
-        $keys           = array_keys($countries);
-        $aux            = array();
-        $real           = array();
+        $keys           = \array_keys($countries);
+        $aux            = [];
+        $real           = [];
 
         // Fetch real language values.
         foreach ($keys as $key) {
@@ -210,7 +211,7 @@ class Country extends BaseSimple
         }
 
         // Add needed fallback values.
-        $keys = array_diff($keys, array_keys($aux));
+        $keys = \array_diff($keys, \array_keys($aux));
         if ($keys) {
             $loadedLanguage = $this->getMetaModel()->getFallbackLanguage();
             $fallbackValues = $this->getCountryNames($loadedLanguage);
@@ -222,7 +223,7 @@ class Country extends BaseSimple
             }
         }
 
-        $keys = array_diff($keys, array_keys($aux));
+        $keys = \array_diff($keys, \array_keys($aux));
         if ($keys) {
             foreach ($keys as $key) {
                 $aux[$key]  = $countries[$key];
@@ -230,9 +231,9 @@ class Country extends BaseSimple
             }
         }
 
-        asort($aux);
-        $return = array();
-        foreach (array_keys($aux) as $key) {
+        \asort($aux);
+        $return = [];
+        foreach (\array_keys($aux) as $key) {
             $return[$key] = $real[$key];
         }
 
@@ -246,16 +247,16 @@ class Country extends BaseSimple
     /**
      * {@inheritDoc}
      */
-    public function getFieldDefinition($arrOverrides = array())
+    public function getFieldDefinition($arrOverrides = [])
     {
         $arrFieldDef                   = parent::getFieldDefinition($arrOverrides);
         $arrFieldDef['inputType']      = 'select';
         $arrFieldDef['eval']['chosen'] = true;
         $arrFieldDef['options']        = $this->getCountries();
 
-        $arrSelectable = deserialize($this->get('countries'), true);
+        $arrSelectable = \deserialize($this->get('countries'), true);
         if ($arrSelectable) {
-            $arrFieldDef['options'] = array_intersect_key($arrFieldDef['options'], array_flip($arrSelectable));
+            $arrFieldDef['options'] = \array_intersect_key($arrFieldDef['options'], \array_flip($arrSelectable));
         }
 
         return $arrFieldDef;
@@ -289,7 +290,7 @@ class Country extends BaseSimple
         }
 
         // Sort the result, see #11
-        asort($options, SORT_LOCALE_STRING);
+        \asort($options, SORT_LOCALE_STRING);
 
         return $options;
     }
@@ -310,18 +311,18 @@ class Country extends BaseSimple
             ->setParameter('ids', $idList, Connection::PARAM_INT_ARRAY)
             ->execute();
 
-        $sorted = array();
+        $sorted = [];
         while ($lookup = $statement->fetch(\PDO::FETCH_OBJ)) {
             $country            = isset($countries[$lookup->country]) ? $countries[$lookup->country] : $lookup->country;
             $sorted[$country][] = $lookup->id;
         }
 
         if ($strDirection === 'DESC') {
-            krsort($sorted);
+            \krsort($sorted);
         } else {
-            ksort($sorted);
+            \ksort($sorted);
         }
 
-        return call_user_func_array('array_merge', $sorted);
+        return \call_user_func_array('array_merge', $sorted);
     }
 }
