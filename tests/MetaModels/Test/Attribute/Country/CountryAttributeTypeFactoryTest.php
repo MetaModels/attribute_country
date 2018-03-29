@@ -26,6 +26,8 @@ use MetaModels\Attribute\IAttributeTypeFactory;
 use MetaModels\Attribute\Country\AttributeTypeFactory;
 use MetaModels\IMetaModel;
 use MetaModels\Test\Attribute\AttributeTypeFactoryTest;
+use MetaModels\MetaModel;
+use MetaModels\Attribute\Country\Country;
 
 /**
  * Test the attribute factory.
@@ -47,11 +49,7 @@ class CountryAttributeTypeFactoryTest extends AttributeTypeFactoryTest
      */
     protected function mockMetaModel($tableName, $language, $fallbackLanguage)
     {
-        $metaModel = $this->getMock(
-            'MetaModels\MetaModel',
-            [],
-            [[]]
-        );
+        $metaModel = $this->getMock(MetaModel::class, [], [[]]);
 
         $metaModel
             ->expects($this->any())
@@ -94,6 +92,6 @@ class CountryAttributeTypeFactoryTest extends AttributeTypeFactoryTest
             $this->mockMetaModel('mm_test', 'de', 'en')
         );
 
-        $this->assertInstanceOf('MetaModels\Attribute\Country\Country', $attribute);
+        $this->assertInstanceOf(Country::class, $attribute);
     }
 }

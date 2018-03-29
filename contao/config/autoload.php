@@ -25,7 +25,7 @@
 /**
  * Register the templates
  */
-TemplateLoader::addFiles(
+\Contao\TemplateLoader::addFiles(
     [
         'mm_attr_country' => 'system/modules/metamodelsattribute_country/templates'
     ]

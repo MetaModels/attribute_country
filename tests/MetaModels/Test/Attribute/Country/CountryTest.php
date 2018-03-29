@@ -61,11 +61,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
      */
     protected function mockMetaModel($language, $fallbackLanguage)
     {
-        $metaModel = $this->getMock(
-            'MetaModels\MetaModel',
-            [],
-            [[]]
-        );
+        $metaModel = $this->getMock('MetaModels\MetaModel', [], [[]]);
 
         $metaModel
             ->expects($this->any())
@@ -109,7 +105,7 @@ class CountryTest extends \PHPUnit_Framework_TestCase
         );
 
         $mockModel = $this->mockMetaModel('a', 'b');
-        $attribute = $this->getMockBuilder('MetaModels\Attribute\Country\Country')->setConstructorArgs(
+        $attribute = $this->getMockBuilder(Country::class)->setConstructorArgs(
             [
                 $mockModel
             ]
