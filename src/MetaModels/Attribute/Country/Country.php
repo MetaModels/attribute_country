@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2016 The MetaModels team.
+ * (c) 2012-2018 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,8 @@
  * @author     Oliver Hoff <oliver@hofff.com>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     Tim Becker <tb@westwerk.ac>
- * @copyright  2012-2016 The MetaModels team.
+ * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @copyright  2012-2018 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -38,7 +39,7 @@ class Country extends BaseSimple
      *
      * @var array
      */
-    protected $countryCache = array();
+    protected $countryCache = [];
 
     /**
      * {@inheritDoc}
@@ -64,13 +65,13 @@ class Country extends BaseSimple
     {
         return array_merge(
             parent::getAttributeSettingNames(),
-            array(
+            [
                 'countries',
                 'filterable',
                 'searchable',
                 'mandatory',
                 'includeBlankOption'
-            )
+            ]
         );
     }
 
@@ -148,8 +149,8 @@ class Country extends BaseSimple
         $languageValues = $this->getCountryNames($loadedLanguage);
         $countries      = $this->getRealCountries();
         $keys           = array_keys($countries);
-        $aux            = array();
-        $real           = array();
+        $aux            = [];
+        $real           = [];
 
         // Fetch real language values.
         foreach ($keys as $key) {
@@ -181,7 +182,7 @@ class Country extends BaseSimple
         }
 
         asort($aux);
-        $return = array();
+        $return = [];
         foreach (array_keys($aux) as $key) {
             $return[$key] = $real[$key];
         }
@@ -196,7 +197,7 @@ class Country extends BaseSimple
     /**
      * {@inheritDoc}
      */
-    public function getFieldDefinition($arrOverrides = array())
+    public function getFieldDefinition($arrOverrides = [])
     {
         $arrFieldDef                   = parent::getFieldDefinition($arrOverrides);
         $arrFieldDef['inputType']      = 'select';
@@ -268,7 +269,7 @@ class Country extends BaseSimple
             )
             ->execute($idList);
 
-        $sorted = array();
+        $sorted = [];
         while ($lookup->next()) {
             $country            = isset($countries[$lookup->country]) ? $countries[$lookup->country] : $lookup->country;
             $sorted[$country][] = $lookup->id;

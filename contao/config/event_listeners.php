@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2016 The MetaModels team.
+ * (c) 2012-2018 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,8 @@
  * @package    MetaModels
  * @subpackage AttributeCountry
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2012-2016 The MetaModels team.
+ * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @copyright  2012-2018 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
  * @filesource
  */
@@ -25,14 +26,14 @@ use MetaModels\MetaModelsEvents;
 
 return array
 (
-    MetaModelsEvents::ATTRIBUTE_FACTORY_CREATE => array(
+    MetaModelsEvents::ATTRIBUTE_FACTORY_CREATE      => [
         function (CreateAttributeFactoryEvent $event) {
             $factory = $event->getFactory();
             $factory->addTypeFactory(new AttributeTypeFactory());
         }
-    ),
-    MetaModelsEvents::FILTER_SETTING_FACTORY_CREATE => array(
-        array(
+    ],
+    MetaModelsEvents::FILTER_SETTING_FACTORY_CREATE => [
+        [
             function (CreateFilterSettingFactoryEvent $event) {
                 $selectFilterFactory = $event->getFactory()->getTypeFactory('select');
                 if ($selectFilterFactory) {
@@ -40,7 +41,7 @@ return array
                 }
             },
             // Low priority to have select filter factory instantiated before we want to populate it.
-            - 200
-        )
-    )
+            -200
+        ]
+    ]
 );
