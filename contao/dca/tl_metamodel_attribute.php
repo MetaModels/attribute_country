@@ -13,8 +13,6 @@
  * @package    MetaModels
  * @subpackage AttributeCountry
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @author     Oliver Hoff <oliver@hofff.com>
- * @author     Andreas Isaak <andy.jared@googlemail.com>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     Ingolf Steinhardt <info@e-spin.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
