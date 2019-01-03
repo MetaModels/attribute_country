@@ -30,8 +30,6 @@ use MetaModels\Attribute\Country\Country;
 
 /**
  * Test the attribute factory.
- *
- * @package MetaModels\Test\Filter\Setting
  */
 class CountryAttributeTypeFactoryTest extends AttributeTypeFactoryTest
 {
