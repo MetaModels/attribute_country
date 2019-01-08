@@ -35,6 +35,15 @@ use MetaModels\MetaModel;
 class CountryTest extends TestCase
 {
     /**
+     * {@inheritDoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        require_once __DIR__ . '/utf8_romanize.php';
+    }
+
+    /**
      * Test data.
      *
      * @var array
