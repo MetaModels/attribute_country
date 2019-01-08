@@ -3,31 +3,27 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2018 The MetaModels team.
+ * (c) 2012-2019 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
  * This project is provided in good faith and hope to be usable by anyone.
  *
- * @package    MetaModels
- * @subpackage Tests
+ * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2012-2018 The MetaModels team.
- * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
+ * @copyright  2012-2019 The MetaModels team.
+ * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
 namespace MetaModels\Test\Attribute\Country;
 
-use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
-use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use MetaModels\Attribute\Country\Country;
 use MetaModels\IMetaModel;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use MetaModels\MetaModel;
 
 /**
@@ -35,6 +31,15 @@ use MetaModels\MetaModel;
  */
 class CountryTest extends TestCase
 {
+    /**
+     * {@inheritDoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        require_once __DIR__ . '/utf8_romanize.php';
+    }
+
     /**
      * Test data.
      *
@@ -68,19 +73,16 @@ class CountryTest extends TestCase
         $metaModel = $this->getMockBuilder(MetaModel::class)->setMethods([])->setConstructorArgs([[]])->getMock();
 
         $metaModel
-            ->expects($this->any())
             ->method('getTableName')
-            ->will($this->returnValue('mm_unittest'));
+            ->willReturn('mm_unittest');
 
         $metaModel
-            ->expects($this->any())
             ->method('getActiveLanguage')
-            ->will($this->returnValue($language));
+            ->willReturn($language);
 
         $metaModel
-            ->expects($this->any())
             ->method('getFallbackLanguage')
-            ->will($this->returnValue($fallbackLanguage));
+            ->willReturn($fallbackLanguage);
 
         return $metaModel;
     }
@@ -89,24 +91,13 @@ class CountryTest extends TestCase
      * Test a literal query.
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function testNormal()
     {
-        if (\version_compare(PHP_VERSION, '5.4', '<')) {
-            $this->markTestSkipped('Invalid test case for PHP 5.3');
-
-            return;
-        }
-
-        $GLOBALS['container']['event-dispatcher'] = new EventDispatcher();
         $GLOBALS['TL_LANGUAGE'] = $GLOBALS['CURRENT_LANGUAGE'] = 'a';
-
-        $GLOBALS['container']['event-dispatcher']->addListener(
-            ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE,
-            function (LoadLanguageFileEvent $event) {
-                $GLOBALS['CURRENT_LANGUAGE'] = $event->getLanguage() ? $event->getLanguage() : 'a';
-            }
-        );
 
         $mockModel = $this->mockMetaModel('a', 'b');
         $attribute = $this->getMockBuilder(Country::class)->setConstructorArgs(
@@ -121,15 +112,15 @@ class CountryTest extends TestCase
             ]
         )->getMock();
 
-        $attribute->expects($this->any())->method('getMetaModel')->will($this->returnValue($mockModel));
+        $attribute->method('getMetaModel')->willReturn($mockModel);
 
-        $attribute->expects($this->any())->method('getRealCountries')->will($this->returnCallback(function () {
+        $attribute->method('getRealCountries')->willReturnCallback(function () {
             return static::$languageValues['base'];
-        }));
+        });
 
-        $attribute->expects($this->any())->method('getCountryNames')->will($this->returnCallback(function ($language) {
+        $attribute->method('getCountryNames')->willReturnCallback(function ($language) {
             return static::$languageValues[$language];
-        }));
+        });
 
         /** @var $attribute Country */
         $this->assertEquals($attribute->getCountryLabel('a'), static::$languageValues['a']['a']);

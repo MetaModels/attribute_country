@@ -12,19 +12,21 @@
  *
  * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @author     Andreas Isaak <info@andreas-isaak.de>
- * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
- * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-/**
- * Register the templates
- */
-\Contao\TemplateLoader::addFiles(
-    [
-        'mm_attr_country' => 'system/modules/metamodelsattribute_country/templates'
-    ]
-);
+if (!function_exists('utf8_romanize')) {
+    /**
+     * Mock method for testing.
+     *
+     * @param string $string The string to "romanize".
+     *
+     * @return string
+     */
+    function utf8_romanize($string)
+    {
+        return strtoupper($string);
+    }
+}
