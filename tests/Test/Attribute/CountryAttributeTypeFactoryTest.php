@@ -3,21 +3,20 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2018 The MetaModels team.
+ * (c) 2012-2019 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
  * This project is provided in good faith and hope to be usable by anyone.
  *
- * @package    MetaModels
- * @subpackage Tests
+ * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2012-2018 The MetaModels team.
- * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0
+ * @copyright  2012-2019 The MetaModels team.
+ * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
@@ -32,12 +31,9 @@ use MetaModels\IMetaModel;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MetaModels\MetaModel;
-use MetaModels\Attribute\Country\Country;
 
 /**
  * Test the attribute factory.
- *
- * @package MetaModels\Test\Filter\Setting
  */
 class CountryAttributeTypeFactoryTest extends TestCase
 {

@@ -1,14 +1,16 @@
 ignore:
-#  Mini Model <minimodel@metamodel.me>
+  - 'Mini Model <minimodel@metamodel.me>'
 
 exclude:
-  languages
+  - /^src\/Resources\/contao\/languages/
 
 mapping:
-  Andreas Isaak <info@andreas-isaak.de>: Andreas Isaak <andy.jared@googlemail.com>
-  Stefan Heimes <stefan_heimes@hotmail.com>: Stefan heimes <stefan_heimes@hotmail.com>
-  Christopher Boelter <c.boelter@cogizz.de>: cogizz <c.boelter@cogizz.de>
+  'Andreas Isaak <info@andreas-isaak.de>': 'Andreas Isaak <andy.jared@googlemail.com>'
+  'Stefan Heimes <stefan_heimes@hotmail.com>': 'Stefan heimes <stefan_heimes@hotmail.com>'
+  'Christopher Boelter <c.boelter@cogizz.de>': 'cogizz <c.boelter@cogizz.de>'
 
 copy-left:
-  "Oliver Hoff <oliver@hofff.com>": "Country.php"
-  "Christian Schiffler <c.schiffler@cyberspectrum.de>": ["AttributeTypeFactory.php", "CountryAttributeTypeFactoryTest.php"]
+  'Oliver Hoff <oliver@hofff.com>': Country.php
+  'Christian Schiffler <c.schiffler@cyberspectrum.de>':
+    - AttributeTypeFactory.php
+    - CountryAttributeTypeFactoryTest.php
