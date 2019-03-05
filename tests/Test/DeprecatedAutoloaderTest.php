@@ -25,8 +25,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This class tests if the deprecated autoloader works.
- *
- * @package MetaModels\AttributeCountryBundle\Test
  */
 class DeprecatedAutoloaderTest extends TestCase
 {
