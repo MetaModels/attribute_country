@@ -13,17 +13,21 @@
  * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
+ * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-namespace MetaModels\Test\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Test\Attribute;
 
-use MetaModels\Attribute\Country\Country;
+use Doctrine\DBAL\Connection;
+use MetaModels\AttributeCountryBundle\Attribute\Country;
+use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use MetaModels\MetaModel;
 
 /**
@@ -88,6 +92,32 @@ class CountryTest extends TestCase
     }
 
     /**
+     * Mock the database connection.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Connection
+     */
+    private function mockConnection()
+    {
+        return $this->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * Mock the table manipulator.
+     *
+     * @param Connection $connection The database connection mock.
+     *
+     * @return TableManipulator|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockTableManipulator(Connection $connection)
+    {
+        return $this->getMockBuilder(TableManipulator::class)
+            ->setConstructorArgs([$connection, []])
+            ->getMock();
+    }
+
+    /**
      * Test a literal query.
      *
      * @return void
@@ -99,18 +129,29 @@ class CountryTest extends TestCase
     {
         $GLOBALS['TL_LANGUAGE'] = $GLOBALS['CURRENT_LANGUAGE'] = 'a';
 
+        $connection  = $this->mockConnection();
+        $manipulator = $this->mockTableManipulator($connection);
+        $dispatcher  = new EventDispatcher();
+
         $mockModel = $this->mockMetaModel('a', 'b');
-        $attribute = $this->getMockBuilder(Country::class)->setConstructorArgs(
-            [
-                $mockModel
-            ]
-        )->setMethods(
-            [
+        $attribute = $this->getMockBuilder(Country::class)
+            ->setConstructorArgs(
+                [
+                    $mockModel,
+                    [],
+                    $connection,
+                    $manipulator,
+                    $dispatcher
+                ]
+            )
+            ->setMethods(
+                [
                 'getMetaModel',
                 'getRealCountries',
                 'getCountryNames'
-            ]
-        )->getMock();
+                ]
+            )
+            ->getMock();
 
         $attribute->method('getMetaModel')->willReturn($mockModel);
 

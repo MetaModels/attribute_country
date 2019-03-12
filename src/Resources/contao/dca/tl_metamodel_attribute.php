@@ -13,22 +13,30 @@
  * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
+ * @author     David Molineus <david.molineus@netzmacht.de>
+ * @author     Ingolf Steinhardt <info@e-spin.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-$GLOBALS['TL_DCA']['tl_metamodel_dcasetting']['metasubselectpalettes']['attr_id']['country'] = [
-    'presentation' => [
-        'tl_class'
-    ],
-    'functions'    => [
-        'mandatory',
-        'includeBlankOption'
-    ],
-    'overview'     => [
-        'filterable',
-        'searchable',
+$GLOBALS['TL_DCA']['tl_metamodel_attribute']['metapalettes']['country extends _simpleattribute_'] = [
+    '+display' => [
+        'countries after description'
+    ]
+];
+
+$GLOBALS['TL_DCA']['tl_metamodel_attribute']['fields']['countries'] = [
+    'label'     => &$GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries'],
+    'exclude'   => true,
+    'inputType' => 'select',
+    'options'   => $this->getCountries(),
+    'sql'       => 'text NULL',
+    'eval'      => [
+        'chosen'     => true,
+        'alwaysSave' => true,
+        'multiple'   => true,
+        'style'      => 'width: 100%'
     ]
 ];

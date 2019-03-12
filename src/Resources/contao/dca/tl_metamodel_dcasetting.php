@@ -13,31 +13,23 @@
  * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
+ * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-namespace MetaModels\Attribute\Country;
-
-use MetaModels\Attribute\AbstractAttributeTypeFactory;
-use MetaModels\Attribute\Country\Country;
-
-/**
- * Attribute type factory for country attributes.
- */
-class AttributeTypeFactory extends AbstractAttributeTypeFactory
-{
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->typeName  = 'country';
-        $this->typeIcon  = 'system/modules/metamodelsattribute_country/html/country.png';
-        $this->typeClass = Country::class;
-    }
-}
+$GLOBALS['TL_DCA']['tl_metamodel_dcasetting']['metasubselectpalettes']['attr_id']['country'] = [
+    'presentation' => [
+        'tl_class'
+    ],
+    'functions'    => [
+        'mandatory',
+        'includeBlankOption'
+    ],
+    'overview'     => [
+        'filterable',
+        'searchable',
+    ]
+];

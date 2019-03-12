@@ -13,25 +13,29 @@
  * @package    MetaModels/attribute_country
  * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
+ * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-namespace MetaModels\Test\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Test\Attribute;
 
+use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\IAttributeTypeFactory;
-use MetaModels\Attribute\Country\AttributeTypeFactory;
+use MetaModels\AttributeCountryBundle\Attribute\AttributeTypeFactory;
+use MetaModels\AttributeCountryBundle\Attribute\Country;
+use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
-use MetaModels\Test\Attribute\AttributeTypeFactoryTest;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use MetaModels\MetaModel;
-use MetaModels\Attribute\Country\Country;
 
 /**
  * Test the attribute factory.
  */
-class CountryAttributeTypeFactoryTest extends AttributeTypeFactoryTest
+class CountryAttributeTypeFactoryTest extends TestCase
 {
     /**
      * Mock a MetaModel.
@@ -67,13 +71,43 @@ class CountryAttributeTypeFactoryTest extends AttributeTypeFactoryTest
     }
 
     /**
+     * Mock the database connection.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|Connection
+     */
+    private function mockConnection()
+    {
+        return $this->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * Mock the table manipulator.
+     *
+     * @param Connection $connection The database connection mock.
+     *
+     * @return TableManipulator|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private function mockTableManipulator(Connection $connection)
+    {
+        return $this->getMockBuilder(TableManipulator::class)
+            ->setConstructorArgs([$connection, []])
+            ->getMock();
+    }
+
+    /**
      * Override the method to run the tests on the attribute factories to be tested.
      *
      * @return IAttributeTypeFactory[]
      */
     protected function getAttributeFactories()
     {
-        return [new AttributeTypeFactory()];
+        $connection  = $this->mockConnection();
+        $manipulator = $this->mockTableManipulator($connection);
+        $dispatcher  = $this->getMockForAbstractClass(EventDispatcherInterface::class);
+
+        return [new AttributeTypeFactory($connection, $manipulator, $dispatcher)];
     }
 
     /**
@@ -83,7 +117,11 @@ class CountryAttributeTypeFactoryTest extends AttributeTypeFactoryTest
      */
     public function testCreateSelect()
     {
-        $factory   = new AttributeTypeFactory();
+        $connection  = $this->mockConnection();
+        $manipulator = $this->mockTableManipulator($connection);
+        $dispatcher  = $this->getMockForAbstractClass(EventDispatcherInterface::class);
+
+        $factory   = new AttributeTypeFactory($connection, $manipulator, $dispatcher);
         $attribute = $factory->createInstance(
             [],
             $this->mockMetaModel('mm_test', 'de', 'en')

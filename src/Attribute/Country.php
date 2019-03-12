@@ -15,18 +15,25 @@
  * @author     Oliver Hoff <oliver@hofff.com>
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     Tim Becker <tb@westwerk.ac>
+ * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-namespace MetaModels\Attribute\Country;
+namespace MetaModels\AttributeCountryBundle\Attribute;
 
+use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
+use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\BaseSimple;
+use MetaModels\Helper\TableManipulator;
+use MetaModels\IMetaModel;
 use MetaModels\Render\Template;
+use Patchwork\Utf8;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * This is the MetaModelAttribute class for handling country fields.
@@ -39,6 +46,53 @@ class Country extends BaseSimple
      * @var array
      */
     protected $countryCache = [];
+
+    /**
+     * Event dispatcher.
+     *
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * Instantiate an MetaModel attribute.
+     *
+     * Note that you should not use this directly but use the factory classes to instantiate attributes.
+     *
+     * @param IMetaModel                    $objMetaModel     The MetaModel instance this attribute belongs to.
+     *
+     * @param array                         $arrData          The information array, for attribute information, refer to
+     *                                                        documentation of table tl_metamodel_attribute and
+     *                                                        documentation of the certain attribute classes for
+     *                                                        information what values are understood.
+     *
+     * @param Connection                    $connection       The database connection.
+     *
+     * @param TableManipulator              $tableManipulator Table manipulator instance.
+     *
+     * @param EventDispatcherInterface|null $eventDispatcher  Event dispatcher.
+     */
+    public function __construct(
+        IMetaModel $objMetaModel,
+        array $arrData = [],
+        Connection $connection = null,
+        TableManipulator $tableManipulator = null,
+        EventDispatcherInterface $eventDispatcher = null
+    ) {
+        parent::__construct($objMetaModel, $arrData, $connection, $tableManipulator);
+
+        if (null === $eventDispatcher) {
+            // @codingStandardsIgnoreStart Silencing errors is discouraged
+            @trigger_error(
+                'Event dispatcher is missing. It has to be passed in the constructor. Fallback will be dropped.',
+                E_USER_DEPRECATED
+            );
+            // @codingStandardsIgnoreEnd
+            $eventDispatcher = System::getContainer()->get('event_dispatcher');
+        }
+
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
     /**
      * {@inheritDoc}
@@ -84,7 +138,7 @@ class Country extends BaseSimple
     protected function getRealCountries()
     {
         // @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
-        include(TL_ROOT . '/system/config/countries.php');
+        include(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/config/countries.php');
         // @codingStandardsIgnoreEnd
         /** @var string[] $countries */
         return $countries;
@@ -102,10 +156,8 @@ class Country extends BaseSimple
      */
     protected function getCountryNames($language)
     {
-        $dispatcher = $this->getMetaModel()->getServiceContainer()->getEventDispatcher();
-
         $event = new LoadLanguageFileEvent('countries', $language, true);
-        $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+        $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
 
         return $GLOBALS['TL_LANG']['CNT'];
     }
@@ -122,10 +174,8 @@ class Country extends BaseSimple
     {
         // Switch back to the original FE language to not disturb the frontend.
         if ($this->getMetaModel()->getActiveLanguage() != $GLOBALS['TL_LANGUAGE']) {
-            $dispatcher = $this->getMetaModel()->getServiceContainer()->getEventDispatcher();
-            $event      = new LoadLanguageFileEvent('countries', null, true);
-
-            $dispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+            $event = new LoadLanguageFileEvent('countries', null, true);
+            $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
         }
     }
 
@@ -154,7 +204,7 @@ class Country extends BaseSimple
         // Fetch real language values.
         foreach ($keys as $key) {
             if (isset($languageValues[$key])) {
-                $aux[$key]  = \utf8_romanize($languageValues[$key]);
+                $aux[$key]  = Utf8::toAscii($languageValues[$key]);
                 $real[$key] = $languageValues[$key];
             }
         }
@@ -166,7 +216,7 @@ class Country extends BaseSimple
             $fallbackValues = $this->getCountryNames($loadedLanguage);
             foreach ($keys as $key) {
                 if (isset($fallbackValues[$key])) {
-                    $aux[$key]  = \utf8_romanize($fallbackValues[$key]);
+                    $aux[$key]  = Utf8::toAscii($fallbackValues[$key]);
                     $real[$key] = $fallbackValues[$key];
                 }
             }
@@ -253,23 +303,15 @@ class Country extends BaseSimple
     {
         $countries = $this->getCountries();
         $metaModel = $this->getMetaModel();
-        $lookup    = $metaModel
-            ->getServiceContainer()
-            ->getDatabase()
-            ->prepare(
-                \sprintf(
-                    'SELECT %1$s AS country,id FROM %2$s WHERE id IN (%3$s)',
-                    // @codingStandardsIgnoreStart
-                    $this->getColName(),           // 1
-                    $metaModel->getTableName(),    // 2
-                    $this->parameterMask($idList)  // 3
-                    // @codingStandardsIgnoreEnd
-                )
-            )
-            ->execute($idList);
+        $statement = $this->connection->createQueryBuilder()
+            ->select($this->getColName() . ' AS country,id')
+            ->from($metaModel->getTableName())
+            ->where('id IN (:ids)')
+            ->setParameter('ids', $idList, Connection::PARAM_INT_ARRAY)
+            ->execute();
 
         $sorted = [];
-        while ($lookup->next()) {
+        while ($lookup = $statement->fetch(\PDO::FETCH_OBJ)) {
             $country            = isset($countries[$lookup->country]) ? $countries[$lookup->country] : $lookup->country;
             $sorted[$country][] = $lookup->id;
         }

@@ -11,20 +11,20 @@
  * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    MetaModels/attribute_country
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @author     Andreas Isaak <info@andreas-isaak.de>
- * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
- * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @author     David Molineus <david.molineus@netzmacht.de>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
+namespace MetaModels\AttributeCountryBundle;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
 /**
- * Register the templates
+ * The Bundle class.
  */
-\Contao\TemplateLoader::addFiles(
-    [
-        'mm_attr_country' => 'system/modules/metamodelsattribute_country/templates'
-    ]
-);
+class MetaModelsAttributeCountryBundle extends Bundle
+{
+
+}

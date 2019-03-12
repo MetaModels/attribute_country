@@ -1,0 +1,9 @@
+services:
+    metamodels.attribute_country.factory:
+        class: MetaModels\AttributeCountryBundle\Attribute\AttributeTypeFactory
+        arguments:
+            - '@database_connection'
+            - '@metamodels.table_manipulator'
+            - '@event_dispatcher'
+        tags:
+          - { name: metamodels.attribute_factory }
