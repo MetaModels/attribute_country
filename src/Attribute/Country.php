@@ -17,6 +17,7 @@
  * @author     Tim Becker <tb@westwerk.ac>
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @author     Ingolf Steinhardt <info@e-spin.de>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
@@ -108,7 +109,7 @@ class Country extends BaseSimple
      */
     public function getSQLDataType()
     {
-        return 'varchar(2) NOT NULL default \'\'';
+        return 'varchar(2) NULL';
     }
 
     /**
@@ -323,5 +324,15 @@ class Country extends BaseSimple
         }
 
         return \call_user_func_array('array_merge', $sorted);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This is needed for compatibility with MySQL strict mode.
+     */
+    public function serializeData($value)
+    {
+        return $value === '' ? null : $value;
     }
 }
