@@ -8,4 +8,5 @@
 -->
 <project name="metamodels/attribute-country" default="build">
     <import file="vendor/phpcq/phpcq/phpcq.main.xml" />
+    <target name="phpspec" />
 </project>
