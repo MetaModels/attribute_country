@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2019 The MetaModels team.
+ * (c) 2012-2020 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,7 @@
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @author     Ingolf Steinhardt <info@e-spin.de>
- * @copyright  2012-2019 The MetaModels team.
+ * @copyright  2012-2020 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
@@ -305,9 +305,9 @@ class Country extends BaseSimple
         $countries = $this->getCountries();
         $metaModel = $this->getMetaModel();
         $statement = $this->connection->createQueryBuilder()
-            ->select($this->getColName() . ' AS country,id')
-            ->from($metaModel->getTableName())
-            ->where('id IN (:ids)')
+            ->select('t.' . $this->getColName() . ' AS t.country, t.id')
+            ->from($metaModel->getTableName(), 't')
+            ->where('t.id IN (:ids)')
             ->setParameter('ids', $idList, Connection::PARAM_INT_ARRAY)
             ->execute();
 
