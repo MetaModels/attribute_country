@@ -305,7 +305,7 @@ class Country extends BaseSimple
         $countries = $this->getCountries();
         $metaModel = $this->getMetaModel();
         $statement = $this->connection->createQueryBuilder()
-            ->select('t.' . $this->getColName() . ' AS t.country, t.id')
+            ->select('t.' . $this->getColName() . ' AS country, t.id')
             ->from($metaModel->getTableName(), 't')
             ->where('t.id IN (:ids)')
             ->setParameter('ids', $idList, Connection::PARAM_INT_ARRAY)
