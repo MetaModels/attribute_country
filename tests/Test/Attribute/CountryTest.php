@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2019 The MetaModels team.
+ * (c) 2012-2021 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,7 @@
  * @author     Cliff Parnitzky <github@cliff-parnitzky.de>
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2012-2019 The MetaModels team.
+ * @copyright  2012-2021 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
@@ -26,19 +26,22 @@ use Doctrine\DBAL\Connection;
 use MetaModels\AttributeCountryBundle\Attribute\Country;
 use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use MetaModels\MetaModel;
 
 /**
  * Unit tests to test class Country.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\Attribute\Country
  */
 class CountryTest extends TestCase
 {
     /**
      * {@inheritDoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         require_once __DIR__ . '/utf8_romanize.php';
@@ -94,7 +97,7 @@ class CountryTest extends TestCase
     /**
      * Mock the database connection.
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Connection
+     * @return MockObject|Connection
      */
     private function mockConnection()
     {
@@ -108,7 +111,7 @@ class CountryTest extends TestCase
      *
      * @param Connection $connection The database connection mock.
      *
-     * @return TableManipulator|\PHPUnit_Framework_MockObject_MockObject
+     * @return TableManipulator|MockObject
      */
     private function mockTableManipulator(Connection $connection)
     {
@@ -164,10 +167,10 @@ class CountryTest extends TestCase
         });
 
         /** @var $attribute Country */
-        $this->assertEquals($attribute->getCountryLabel('a'), static::$languageValues['a']['a']);
-        $this->assertEquals($attribute->getCountryLabel('b'), static::$languageValues['b']['b']);
-        $this->assertEquals($attribute->getCountryLabel('c'), static::$languageValues['base']['c']);
-        $this->assertEquals('a', $GLOBALS['CURRENT_LANGUAGE']);
-        $this->assertEquals('a', $GLOBALS['TL_LANGUAGE']);
+        self::assertEquals($attribute->getCountryLabel('a'), static::$languageValues['a']['a']);
+        self::assertEquals($attribute->getCountryLabel('b'), static::$languageValues['b']['b']);
+        self::assertEquals($attribute->getCountryLabel('c'), static::$languageValues['base']['c']);
+        self::assertEquals('a', $GLOBALS['CURRENT_LANGUAGE']);
+        self::assertEquals('a', $GLOBALS['TL_LANGUAGE']);
     }
 }
