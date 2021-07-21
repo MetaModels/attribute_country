@@ -12,6 +12,7 @@
  *
  * @package    MetaModels/attribute_country
  * @author     David Molineus <david.molineus@netzmacht.de>
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
@@ -25,6 +26,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This class tests if the deprecated autoloader works.
+ *
+ * @coversNothing
  */
 class DeprecatedAutoloaderTest extends TestCase
 {

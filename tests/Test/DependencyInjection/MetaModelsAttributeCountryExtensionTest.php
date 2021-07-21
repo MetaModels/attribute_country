@@ -13,6 +13,7 @@
  * @package    MetaModels/attribute_country
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Ingolf Steinhardt <info@e-spin.de>
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @copyright  2012-2020 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
@@ -32,6 +33,8 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
  * This test case test the extension.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\DependencyInjection\MetaModelsAttributeCountryExtension
  */
 class MetaModelsAttributeCountryExtensionTest extends TestCase
 {

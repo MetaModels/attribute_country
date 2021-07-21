@@ -32,6 +32,8 @@ use MetaModels\MetaModel;
 
 /**
  * Unit tests to test class Country.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\Attribute\Country
  */
 class CountryTest extends TestCase
 {
