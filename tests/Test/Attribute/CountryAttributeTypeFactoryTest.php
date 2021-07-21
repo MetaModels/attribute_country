@@ -34,6 +34,8 @@ use MetaModels\MetaModel;
 
 /**
  * Test the attribute factory.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\Attribute\AttributeTypeFactory
  */
 class CountryAttributeTypeFactoryTest extends TestCase
 {

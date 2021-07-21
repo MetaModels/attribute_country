@@ -32,13 +32,15 @@ use MetaModels\MetaModel;
 
 /**
  * Unit tests to test class Country.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\Attribute\Country
  */
 class CountryTest extends TestCase
 {
     /**
      * {@inheritDoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         require_once __DIR__ . '/utf8_romanize.php';

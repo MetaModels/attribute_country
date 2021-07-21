@@ -12,6 +12,7 @@
  *
  * @package    MetaModels/attribute_country
  * @author     David Molineus <david.molineus@netzmacht.de>
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @copyright  2012-2019 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
@@ -28,6 +29,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests the contao manager plugin.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\ContaoManager\Plugin
  */
 class PluginTest extends TestCase
 {
