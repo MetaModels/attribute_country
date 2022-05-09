@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2021 The MetaModels team.
+ * (c) 2012-2022 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,7 @@
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @author     Ingolf Steinhardt <info@e-spin.de>
- * @copyright  2012-2021 The MetaModels team.
+ * @copyright  2012-2022 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
@@ -157,8 +157,9 @@ class Country extends BaseSimple
      */
     protected function getCountryNames($language)
     {
+        // FIXME: do we need a language with '_' or '-' here?????
         $event = new LoadLanguageFileEvent('countries', $language, true);
-        $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
+        $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
 
         return $GLOBALS['TL_LANG']['CNT'];
     }
@@ -171,12 +172,12 @@ class Country extends BaseSimple
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
-    protected function restoreLanguage()
+    protected function restoreLanguage(string $lastLoadedLanguage)
     {
         // Switch back to the original FE language to not disturb the frontend.
-        if ($this->getMetaModel()->getActiveLanguage() != $GLOBALS['TL_LANGUAGE']) {
+        if ($lastLoadedLanguage != \str_replace('-', '_', $GLOBALS['TL_LANGUAGE'])) {
             $event = new LoadLanguageFileEvent('countries', null, true);
-            $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
+            $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
         }
     }
 
@@ -212,9 +213,10 @@ class Country extends BaseSimple
 
         // Add needed fallback values.
         $keys = \array_diff($keys, \array_keys($aux));
+        $fallbackLanguage = null;
         if ($keys) {
-            $loadedLanguage = $this->getMetaModel()->getFallbackLanguage();
-            $fallbackValues = $this->getCountryNames($loadedLanguage);
+            $fallbackLanguage = $this->getMetaModel()->getFallbackLanguage();
+            $fallbackValues = $this->getCountryNames($fallbackLanguage);
             foreach ($keys as $key) {
                 if (isset($fallbackValues[$key])) {
                     $aux[$key]  = Utf8::toAscii($fallbackValues[$key]);
@@ -237,7 +239,9 @@ class Country extends BaseSimple
             $return[$key] = $real[$key];
         }
 
-        $this->restoreLanguage();
+        if (null !== $fallbackLanguage) {
+            $this->restoreLanguage($fallbackLanguage);
+        }
 
         $this->countryCache[$loadedLanguage] = $return;
 
