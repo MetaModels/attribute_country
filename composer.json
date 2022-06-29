@@ -33,7 +33,6 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "contao-community-alliance/dc-general": "^2.3@dev",
-    "contao-community-alliance/contao-polyfill-bundle": "^1.1.0",
     "contao/core-bundle": "^4.13.0, <5.0",
     "doctrine/dbal": "^3.3",
     "metamodels/core": "^2.3@dev",
