@@ -33,8 +33,8 @@ use MetaModels\Attribute\BaseSimple;
 use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
 use MetaModels\Render\Template;
-use Patchwork\Utf8;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * This is the MetaModelAttribute class for handling country fields.
@@ -159,7 +159,7 @@ class Country extends BaseSimple
     {
         // FIXME: do we need a language with '_' or '-' here?????
         $event = new LoadLanguageFileEvent('countries', $language, true);
-        $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+        $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
 
         return $GLOBALS['TL_LANG']['CNT'];
     }
@@ -177,7 +177,7 @@ class Country extends BaseSimple
         // Switch back to the original FE language to not disturb the frontend.
         if ($lastLoadedLanguage != \str_replace('-', '_', $GLOBALS['TL_LANGUAGE'])) {
             $event = new LoadLanguageFileEvent('countries', null, true);
-            $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+            $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
         }
     }
 
@@ -206,7 +206,7 @@ class Country extends BaseSimple
         // Fetch real language values.
         foreach ($keys as $key) {
             if (isset($languageValues[$key])) {
-                $aux[$key]  = Utf8::toAscii($languageValues[$key]);
+                $aux[$key]  = (new UnicodeString($languageValues[$key]))->ascii()->toString();
                 $real[$key] = $languageValues[$key];
             }
         }
