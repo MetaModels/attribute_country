@@ -313,11 +313,13 @@ class Country extends BaseSimple
             ->from($metaModel->getTableName(), 't')
             ->where('t.id IN (:ids)')
             ->setParameter('ids', $idList, Connection::PARAM_INT_ARRAY)
-            ->execute();
+            ->executeQuery();
 
         $sorted = [];
-        while ($lookup = $statement->fetch(\PDO::FETCH_OBJ)) {
-            $country            = isset($countries[$lookup->country]) ? $countries[$lookup->country] : $lookup->country;
+        while ($lookup = $statement->fetchAssociative()) {
+            $country            = isset($countries[$lookup['country']])
+                ? $countries[$lookup['country']]
+                : $lookup['country'];
             $sorted[$country][] = $lookup->id;
         }
 
