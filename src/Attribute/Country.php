@@ -190,7 +190,8 @@ class Country extends BaseSimple
      *
      * @return string[]
      *
-     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function getCountries()
     {
