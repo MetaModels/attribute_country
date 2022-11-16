@@ -8,13 +8,13 @@
     "country"
   ],
   "type": "contao-bundle",
-  "homepage": "http://now.metamodel.me/",
+  "homepage": "https://now.metamodel.me/",
   "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Christian Schiffler",
       "email": "c.schiffler@cyberspectrum.de",
-      "homepage": "http://www.cyberspectrum.de",
+      "homepage": "https://www.cyberspectrum.de",
       "role": "Developer"
     },
     {
@@ -26,19 +26,19 @@
   "support": {
     "email": "mail@metamodel.me",
     "issues": "https://github.com/MetaModels/attribute_country/issues",
-    "wiki": "http://de.contaowiki.org/MetaModels",
+    "wiki": "https://de.contaowiki.org/MetaModels",
     "irc": "irc://irc.freenode.org/contao.mm",
     "source": "https://github.com/MetaModels/attribute_country"
   },
   "require": {
-    "php": "^7.2",
-    "contao-community-alliance/dc-general": "^2.1.0",
+    "php": "^7.4",
+    "contao-community-alliance/dc-general": "^2.2",
     "contao-community-alliance/contao-polyfill-bundle": "^1.1.0",
     "contao/core-bundle": "^4.9.0, <4.13.0",
     "doctrine/dbal": "^2.11 || ^3.0",
-    "metamodels/core": "^2.1",
-    "symfony/dependency-injection": "4.4.*",
-    "symfony/event-dispatcher": "4.4.*",
+    "metamodels/core": "^2.2",
+    "symfony/dependency-injection": "^4.4.6",
+    "symfony/event-dispatcher": "^4.4.6",
     "symfony/http-kernel": "~4.4.13"
   },
   "require-dev": {
