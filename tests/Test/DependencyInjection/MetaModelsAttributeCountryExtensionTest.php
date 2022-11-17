@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2020 The MetaModels team.
+ * (c) 2012-2021 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,8 @@
  * @package    MetaModels/attribute_country
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Ingolf Steinhardt <info@e-spin.de>
- * @copyright  2012-2020 The MetaModels team.
+ * @author     Sven Baumann <baumann.sv@gmail.com>
+ * @copyright  2012-2021 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
@@ -32,6 +33,8 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
  * This test case test the extension.
+ *
+ * @covers \MetaModels\AttributeCountryBundle\DependencyInjection\MetaModelsAttributeCountryExtension
  */
 class MetaModelsAttributeCountryExtensionTest extends TestCase
 {
@@ -44,8 +47,8 @@ class MetaModelsAttributeCountryExtensionTest extends TestCase
     {
         $extension = new MetaModelsAttributeCountryExtension();
 
-        $this->assertInstanceOf(MetaModelsAttributeCountryExtension::class, $extension);
-        $this->assertInstanceOf(ExtensionInterface::class, $extension);
+        self::assertInstanceOf(MetaModelsAttributeCountryExtension::class, $extension);
+        self::assertInstanceOf(ExtensionInterface::class, $extension);
     }
 
     /**
@@ -58,12 +61,12 @@ class MetaModelsAttributeCountryExtensionTest extends TestCase
         $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
 
         $container
-            ->expects($this->exactly(2))
+            ->expects(self::exactly(2))
             ->method('setDefinition')
             ->withConsecutive(
                 [
                     'metamodels.attribute_country.factory',
-                    $this->callback(
+                    self::callback(
                         function ($value) {
                             /** @var Definition $value */
                             $this->assertInstanceOf(Definition::class, $value);
@@ -76,7 +79,7 @@ class MetaModelsAttributeCountryExtensionTest extends TestCase
                 ],
                 [
                     AllowNullMigration::class,
-                    $this->callback(
+                    self::callback(
                         function ($value) {
                             /** @var Definition $value */
                             $this->assertInstanceOf(Definition::class, $value);
