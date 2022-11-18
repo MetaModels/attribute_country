@@ -157,7 +157,9 @@ class Country extends BaseSimple
      */
     protected function getCountryNames($language)
     {
+        // @codingStandardsIgnoreStart
         // FIXME: do we need a language with '_' or '-' here?????
+        // @codingStandardsIgnoreEnd
         $event = new LoadLanguageFileEvent('countries', $language, true);
         $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
 
@@ -188,7 +190,8 @@ class Country extends BaseSimple
      *
      * @return string[]
      *
-     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function getCountries()
     {
@@ -212,11 +215,11 @@ class Country extends BaseSimple
         }
 
         // Add needed fallback values.
-        $keys = \array_diff($keys, \array_keys($aux));
+        $keys             = \array_diff($keys, \array_keys($aux));
         $fallbackLanguage = null;
         if ($keys) {
             $fallbackLanguage = $this->getMetaModel()->getFallbackLanguage();
-            $fallbackValues = $this->getCountryNames($fallbackLanguage);
+            $fallbackValues   = $this->getCountryNames($fallbackLanguage);
             foreach ($keys as $key) {
                 if (isset($fallbackValues[$key])) {
                     $aux[$key]  = Utf8::toAscii($fallbackValues[$key]);
