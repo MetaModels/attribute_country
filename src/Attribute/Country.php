@@ -323,7 +323,7 @@ class Country extends BaseSimple
             $country            = isset($countries[$lookup['country']])
                 ? $countries[$lookup['country']]
                 : $lookup['country'];
-            $sorted[$country][] = $lookup->id;
+            $sorted[$country][] = $lookup['id'];
         }
 
         if ($strDirection === 'DESC') {
@@ -332,7 +332,7 @@ class Country extends BaseSimple
             \ksort($sorted);
         }
 
-        return \call_user_func_array('array_merge', $sorted);
+        return \call_user_func_array('array_merge', \array_values($sorted));
     }
 
     /**
