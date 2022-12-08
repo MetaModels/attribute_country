@@ -101,7 +101,7 @@ class Country extends BaseSimple
     protected function prepareTemplate(Template $objTemplate, $arrRowData, $objSettings)
     {
         parent::prepareTemplate($objTemplate, $arrRowData, $objSettings);
-        $objTemplate->value = $this->getCountryLabel($arrRowData[$this->getColName()]);
+        $objTemplate->value = $this->getCountryLabel(($arrRowData[$this->getColName()] ?? null));
     }
 
     /**
