@@ -60,10 +60,7 @@
     }
   },
   "extra": {
-    "contao-manager-plugin": "MetaModels\\AttributeCountryBundle\\ContaoManager\\Plugin",
-    "branch-alias": {
-      "dev-hotfix/2.2.1": "2.2.1-dev"
-    }
+    "contao-manager-plugin": "MetaModels\\AttributeCountryBundle\\ContaoManager\\Plugin"
   },
   "config": {
     "allow-plugins": {
