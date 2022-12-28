@@ -13,3 +13,7 @@ services:
             - '@database_connection'
         tags:
             - name: contao.migration
+
+    MetaModels\AttributeCountryBundle\Schema\DoctrineSchemaGenerator:
+        tags:
+            - { name: 'metamodels.schema-generator.doctrine' }
