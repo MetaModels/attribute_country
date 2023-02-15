@@ -30,6 +30,7 @@ use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
 use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\BaseSimple;
+use MetaModels\Helper\LocaleUtil;
 use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
 use MetaModels\Render\Template;
@@ -177,7 +178,8 @@ class Country extends BaseSimple
     protected function restoreLanguage(string $lastLoadedLanguage)
     {
         // Switch back to the original FE language to not disturb the frontend.
-        if ($lastLoadedLanguage != \str_replace('-', '_', $GLOBALS['TL_LANGUAGE'])) {
+        // @deprecated usage of TL_LANGUAGE - remove for Contao 5.0.
+        if ($lastLoadedLanguage != LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE'])) {
             $event = new LoadLanguageFileEvent('countries', null, true);
             $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
         }
