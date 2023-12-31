@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2021 The MetaModels team.
+ * (c) 2012-2024 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,12 +14,12 @@
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Ingolf Steinhardt <info@e-spin.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2012-2021 The MetaModels team.
+ * @copyright  2012-2024 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace MetaModels\AttributeCountryBundle\Test\DependencyInjection;
 
@@ -38,12 +38,7 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
  */
 class MetaModelsAttributeCountryExtensionTest extends TestCase
 {
-    /**
-     * Test that extension can be instantiated.
-     *
-     * @return void
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $extension = new MetaModelsAttributeCountryExtension();
 
@@ -51,47 +46,19 @@ class MetaModelsAttributeCountryExtensionTest extends TestCase
         self::assertInstanceOf(ExtensionInterface::class, $extension);
     }
 
-    /**
-     * Test that the services are loaded.
-     *
-     * @return void
-     */
-    public function testRegistersServices()
+    public function testRegistersServices(): void
     {
-        $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
-
-        $container
-            ->expects(self::exactly(2))
-            ->method('setDefinition')
-            ->withConsecutive(
-                [
-                    'metamodels.attribute_country.factory',
-                    self::callback(
-                        function ($value) {
-                            /** @var Definition $value */
-                            $this->assertInstanceOf(Definition::class, $value);
-                            $this->assertEquals(AttributeTypeFactory::class, $value->getClass());
-                            $this->assertCount(1, $value->getTag('metamodels.attribute_factory'));
-
-                            return true;
-                        }
-                    )
-                ],
-                [
-                    AllowNullMigration::class,
-                    self::callback(
-                        function ($value) {
-                            /** @var Definition $value */
-                            $this->assertInstanceOf(Definition::class, $value);
-                            $this->assertCount(1, $value->getTag('contao.migration'));
-
-                            return true;
-                        }
-                    )
-                ]
-            );
+        $container = new ContainerBuilder();
 
         $extension = new MetaModelsAttributeCountryExtension();
         $extension->load([], $container);
+
+        self::assertTrue($container->hasDefinition('metamodels.attribute_country.factory'));
+        $definition = $container->getDefinition('metamodels.attribute_country.factory');
+        self::assertCount(1, $definition->getTag('metamodels.attribute_factory'));
+
+        self::assertTrue($container->hasDefinition(AllowNullMigration::class));
+        $definition = $container->getDefinition(AllowNullMigration::class);
+        self::assertCount(1, $definition->getTag('contao.migration'));
     }
 }
