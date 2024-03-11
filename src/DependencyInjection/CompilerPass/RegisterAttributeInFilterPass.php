@@ -11,27 +11,28 @@
  * This project is provided in good faith and hope to be usable by anyone.
  *
  * @package    MetaModels/attribute_country
- * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Ingolf Steinhardt <info@e-spin.de>
  * @copyright  2012-2023 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-namespace MetaModels\AttributeCountryBundle;
+namespace MetaModels\AttributeCountryBundle\DependencyInjection\CompilerPass;
 
-use MetaModels\AttributeCountryBundle\DependencyInjection\CompilerPass\RegisterAttributeInFilterPass;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * The Bundle class.
+ * This pass adds the tagged factories to the MetaModels factories.
  */
-class MetaModelsAttributeCountryBundle extends Bundle
+class RegisterAttributeInFilterPass implements CompilerPassInterface
 {
-    public function build(ContainerBuilder $container): void
+    public function process(ContainerBuilder $container): void
     {
-        parent::build($container);
-        $container->addCompilerPass(new RegisterAttributeInFilterPass());
+        if ($container->hasDefinition('metamodels.filter_setting_factory.simplelookup')) {
+            $container
+                ->getDefinition('metamodels.filter_setting_factory.simplelookup')
+                ->addMethodCall('addKnownAttributeType', ['country']);
+        }
     }
 }
