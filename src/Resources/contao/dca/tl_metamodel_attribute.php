@@ -28,12 +28,13 @@ $GLOBALS['TL_DCA']['tl_metamodel_attribute']['metapalettes']['country extends _s
 ];
 
 $GLOBALS['TL_DCA']['tl_metamodel_attribute']['fields']['countries'] = [
-    'label'     => &$GLOBALS['TL_LANG']['tl_metamodel_attribute']['countries'],
-    'exclude'   => true,
-    'inputType' => 'select',
-    'options'   => $this->getCountries(),
-    'sql'       => 'text NULL',
-    'eval'      => [
+    'label'       => 'countries.label',
+    'description' => 'countries.description',
+    'exclude'     => true,
+    'inputType'   => 'select',
+    'options'     => $this->getCountries(),
+    'sql'         => 'text NULL',
+    'eval'        => [
         'chosen'     => true,
         'alwaysSave' => true,
         'multiple'   => true,
