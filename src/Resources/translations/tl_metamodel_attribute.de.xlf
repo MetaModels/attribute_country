@@ -1,0 +1,20 @@
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="src/Resources/translations/tl_metamodel_attribute.en.xlf" target-language="de">
+    <body>
+      <trans-unit id="typeOptions.country" resname="typeOptions.country">
+        <source>Country</source>
+        <target>Land</target>
+      </trans-unit>
+      <trans-unit id="countries.label" resname="countries.label">
+        <source>Filter available countries</source>
+        <target>Verfügbare Länder filtern</target>
+      </trans-unit>
+      <trans-unit id="countries.description" resname="countries.description">
+        <source>Filter the countries that will be available for selection. If none is selected, all countries will be
+          available.
+        </source>
+        <target>Filtern Sie die Länder, die verfügbar sind. Ist kein Land ausgewählt, sind alle Länder verfügbar.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
