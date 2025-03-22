@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2022 The MetaModels team.
+ * (c) 2012-2023 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,23 +18,26 @@
  * @author     David Molineus <david.molineus@netzmacht.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
  * @author     Ingolf Steinhardt <info@e-spin.de>
- * @copyright  2012-2022 The MetaModels team.
+ * @copyright  2012-2023 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
 namespace MetaModels\AttributeCountryBundle\Attribute;
 
+use Contao\StringUtil;
 use Contao\System;
 use ContaoCommunityAlliance\Contao\Bindings\ContaoEvents;
 use ContaoCommunityAlliance\Contao\Bindings\Events\System\LoadLanguageFileEvent;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use MetaModels\Attribute\BaseSimple;
+use MetaModels\Helper\LocaleUtil;
 use MetaModels\Helper\TableManipulator;
 use MetaModels\IMetaModel;
 use MetaModels\Render\Template;
-use Patchwork\Utf8;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * This is the MetaModelAttribute class for handling country fields.
@@ -53,7 +56,7 @@ class Country extends BaseSimple
      *
      * @var EventDispatcherInterface
      */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * Instantiate an MetaModel attribute.
@@ -61,15 +64,12 @@ class Country extends BaseSimple
      * Note that you should not use this directly but use the factory classes to instantiate attributes.
      *
      * @param IMetaModel                    $objMetaModel     The MetaModel instance this attribute belongs to.
-     *
      * @param array                         $arrData          The information array, for attribute information, refer to
      *                                                        documentation of table tl_metamodel_attribute and
      *                                                        documentation of the certain attribute classes for
      *                                                        information what values are understood.
-     *
-     * @param Connection                    $connection       The database connection.
-     *
-     * @param TableManipulator              $tableManipulator Table manipulator instance.
+     * @param Connection|null               $connection       The database connection.
+     * @param TableManipulator|null         $tableManipulator Table manipulator instance.
      *
      * @param EventDispatcherInterface|null $eventDispatcher  Event dispatcher.
      */
@@ -83,15 +83,15 @@ class Country extends BaseSimple
         parent::__construct($objMetaModel, $arrData, $connection, $tableManipulator);
 
         if (null === $eventDispatcher) {
-            // @codingStandardsIgnoreStart Silencing errors is discouraged
+            // @codingStandardsIgnoreStart
             @trigger_error(
                 'Event dispatcher is missing. It has to be passed in the constructor. Fallback will be dropped.',
                 E_USER_DEPRECATED
             );
             // @codingStandardsIgnoreEnd
             $eventDispatcher = System::getContainer()->get('event_dispatcher');
+            assert($eventDispatcher instanceof EventDispatcherInterface);
         }
-
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -101,7 +101,7 @@ class Country extends BaseSimple
     protected function prepareTemplate(Template $objTemplate, $arrRowData, $objSettings)
     {
         parent::prepareTemplate($objTemplate, $arrRowData, $objSettings);
-        $objTemplate->value = $this->getCountryLabel(($arrRowData[$this->getColName()] ?? null));
+        $objTemplate->value = $this->getCountryLabel($arrRowData[$this->getColName()] ?? '');
     }
 
     /**
@@ -138,10 +138,14 @@ class Country extends BaseSimple
      */
     protected function getRealCountries()
     {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        assert(\is_string($rootDir));
+        /** @psalm-suppress UnresolvableInclude */
         // @codingStandardsIgnoreStart - Include is required here, can not switch to require_once.
-        include(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/config/countries.php');
+        include($rootDir . '/vendor/contao/core-bundle/src/Resources/contao/config/countries.php');
         // @codingStandardsIgnoreEnd
         /** @var string[] $countries */
+
         return $countries;
     }
 
@@ -161,7 +165,7 @@ class Country extends BaseSimple
         // FIXME: do we need a language with '_' or '-' here?????
         // @codingStandardsIgnoreEnd
         $event = new LoadLanguageFileEvent('countries', $language, true);
-        $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+        $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
 
         return $GLOBALS['TL_LANG']['CNT'];
     }
@@ -177,9 +181,10 @@ class Country extends BaseSimple
     protected function restoreLanguage(string $lastLoadedLanguage)
     {
         // Switch back to the original FE language to not disturb the frontend.
-        if ($lastLoadedLanguage != \str_replace('-', '_', $GLOBALS['TL_LANGUAGE'])) {
+        // @deprecated usage of TL_LANGUAGE - remove for Contao 5.0.
+        if ($lastLoadedLanguage !== LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE'])) {
             $event = new LoadLanguageFileEvent('countries', null, true);
-            $this->eventDispatcher->dispatch(ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE, $event);
+            $this->eventDispatcher->dispatch($event, ContaoEvents::SYSTEM_LOAD_LANGUAGE_FILE);
         }
     }
 
@@ -195,6 +200,7 @@ class Country extends BaseSimple
      */
     protected function getCountries()
     {
+        /** @psalm-suppress DeprecatedMethod */
         $loadedLanguage = $this->getMetaModel()->getActiveLanguage();
         if (isset($this->countryCache[$loadedLanguage])) {
             return $this->countryCache[$loadedLanguage];
@@ -209,7 +215,7 @@ class Country extends BaseSimple
         // Fetch real language values.
         foreach ($keys as $key) {
             if (isset($languageValues[$key])) {
-                $aux[$key]  = Utf8::toAscii($languageValues[$key]);
+                $aux[$key]  = (new UnicodeString($languageValues[$key]))->ascii()->toString();
                 $real[$key] = $languageValues[$key];
             }
         }
@@ -218,11 +224,12 @@ class Country extends BaseSimple
         $keys             = \array_diff($keys, \array_keys($aux));
         $fallbackLanguage = null;
         if ($keys) {
+            /** @psalm-suppress DeprecatedMethod */
             $fallbackLanguage = $this->getMetaModel()->getFallbackLanguage();
-            $fallbackValues   = $this->getCountryNames($fallbackLanguage);
+            $fallbackValues   = $this->getCountryNames($fallbackLanguage ?? '');
             foreach ($keys as $key) {
                 if (isset($fallbackValues[$key])) {
-                    $aux[$key]  = Utf8::toAscii($fallbackValues[$key]);
+                    $aux[$key]  = (new UnicodeString($fallbackValues[$key]))->ascii()->toString();
                     $real[$key] = $fallbackValues[$key];
                 }
             }
@@ -261,7 +268,7 @@ class Country extends BaseSimple
         $arrFieldDef['eval']['chosen'] = true;
         $arrFieldDef['options']        = $this->getCountries();
 
-        $arrSelectable = \deserialize($this->get('countries'), true);
+        $arrSelectable = StringUtil::deserialize($this->get('countries'), true);
         if ($arrSelectable) {
             $arrFieldDef['options'] = \array_intersect_key($arrFieldDef['options'], \array_flip($arrSelectable));
         }
@@ -280,7 +287,7 @@ class Country extends BaseSimple
     {
         $countries = $this->getCountries();
 
-        return isset($countries[$strCountry]) ? $countries[$strCountry] : null;
+        return $countries[$strCountry] ?? '';
     }
 
     /**
@@ -293,7 +300,7 @@ class Country extends BaseSimple
         $options = parent::getFilterOptions($idList, $usedOnly, $arrCount);
 
         foreach ($options as $k => $v) {
-            $options[$k] = $this->getCountryLabel($k);
+            $options[$k] = $this->getCountryLabel((string) $k);
         }
 
         // Sort the result, see #11
@@ -315,13 +322,15 @@ class Country extends BaseSimple
             ->select('t.' . $this->getColName() . ' AS country, t.id')
             ->from($metaModel->getTableName(), 't')
             ->where('t.id IN (:ids)')
-            ->setParameter('ids', $idList, Connection::PARAM_INT_ARRAY)
-            ->execute();
+            ->setParameter('ids', $idList, ArrayParameterType::INTEGER)
+            ->executeQuery();
 
         $sorted = [];
-        while ($lookup = $statement->fetch(\PDO::FETCH_OBJ)) {
-            $country            = isset($countries[$lookup->country]) ? $countries[$lookup->country] : $lookup->country;
-            $sorted[$country][] = $lookup->id;
+        while ($lookup = $statement->fetchAssociative()) {
+            $country            = isset($countries[$lookup['country']])
+                ? $countries[$lookup['country']]
+                : $lookup['country'];
+            $sorted[$country][] = $lookup['id'];
         }
 
         if ($strDirection === 'DESC') {
@@ -330,7 +339,7 @@ class Country extends BaseSimple
             \ksort($sorted);
         }
 
-        return \call_user_func_array('array_merge', $sorted);
+        return \call_user_func_array('array_merge', \array_values($sorted));
     }
 
     /**

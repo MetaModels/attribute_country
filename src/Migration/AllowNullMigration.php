@@ -3,7 +3,7 @@
 /**
  * This file is part of MetaModels/attribute_country.
  *
- * (c) 2012-2021 The MetaModels team.
+ * (c) 2012-2024 The MetaModels team.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,22 +13,27 @@
  * @package    MetaModels/attribute_country
  * @author     Ingolf Steinhardt <info@e-spin.de>
  * @author     Sven Baumann <baumann.sv@gmail.com>
- * @copyright  2012-2021 The MetaModels team.
+ * @copyright  2012-2024 The MetaModels team.
  * @license    https://github.com/MetaModels/attribute_country/blob/master/LICENSE LGPL-3.0-or-later
  * @filesource
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace MetaModels\AttributeCountryBundle\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\ColumnDiff;
-use Doctrine\DBAL\Schema\TableDiff;
+use Doctrine\DBAL\Schema\SchemaException;
+
+use function array_intersect;
+use function array_map;
+use function array_values;
+use function count;
+use function implode;
 
 /**
  * This migration changes all database columns to allow null values.
@@ -42,7 +47,10 @@ class AllowNullMigration extends AbstractMigration
      *
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
+
+    /** @var list<string> */
+    private array $existsCache = [];
 
     /**
      * Create a new instance.
@@ -74,9 +82,7 @@ class AllowNullMigration extends AbstractMigration
      */
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
-
-        if (!$schemaManager->tablesExist(['tl_metamodel', 'tl_metamodel_attribute'])) {
+        if (!$this->tablesExist(['tl_metamodel', 'tl_metamodel_attribute'])) {
             return false;
         }
 
@@ -118,19 +124,21 @@ class AllowNullMigration extends AbstractMigration
         if (empty($langColumns)) {
             return [];
         }
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         $result = [];
         foreach ($langColumns as $tableName => $tableColumnNames) {
+            if (!$this->tablesExist([$tableName])) {
+                continue;
+            }
+
             /** @var Column[] $columns */
             $columns = [];
             // The schema manager return the column list with lowercase keys, wo got to use the real names.
-            \array_map(
-                function (Column $column) use (&$columns) {
-                    $columns[$column->getName()] = $column;
-                },
-                $schemaManager->listTableColumns($tableName)
-            );
+            $table = $schemaManager->introspectTable($tableName);
+            foreach ($table->getColumns() as $column) {
+                $columns[$column->getName()] = $column;
+            }
             foreach ($tableColumnNames as $tableColumnName) {
                 $column = ($columns[$tableColumnName] ?? null);
                 if (null === $column) {
@@ -163,7 +171,7 @@ class AllowNullMigration extends AbstractMigration
             ->leftJoin('attribute', 'tl_metamodel', 'metamodel', 'attribute.pid = metamodel.id')
             ->where('attribute.type=:type')
             ->setParameter('type', 'country')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
 
         $result = [];
@@ -184,22 +192,21 @@ class AllowNullMigration extends AbstractMigration
      * @param Column $column    The column.
      *
      * @return void
+     *
+     * @throws Exception
+     * @throws SchemaException
      */
     private function fixColumn(string $tableName, Column $column): void
     {
-        $manager = $this->connection->getSchemaManager();
-        $table   = $manager->listTableDetails($tableName);
+        $manager = $this->connection->createSchemaManager();
+        $table   = $manager->introspectTable($tableName);
+        $updated = $manager->introspectTable($tableName);
 
-        $changeColumn = new Column($column->getName(), $column->getType());
-        $changeColumn
-            ->setLength($column->getLength())
+        $updated->getColumn($column->getName())
             ->setNotnull(false)
             ->setDefault(null);
-        $columnDiff = new ColumnDiff($column->getName(), $changeColumn);
 
-        $tableDiff                   = new TableDiff($tableName);
-        $tableDiff->fromTable        = $table;
-        $tableDiff->changedColumns[] = $columnDiff;
+        $tableDiff = $manager->createComparator()->compareTables($table, $updated);
 
         $manager->alterTable($tableDiff);
 
@@ -207,6 +214,15 @@ class AllowNullMigration extends AbstractMigration
             ->update($tableName, 't')
             ->set('t.' . $column->getName(), 'null')
             ->where('t.' . $column->getName() . ' = ""')
-            ->execute();
+            ->executeQuery();
+    }
+
+    private function tablesExist(array $tableNames): bool
+    {
+        if ([] === $this->existsCache) {
+            $this->existsCache = array_values($this->connection->createSchemaManager()->listTableNames());
+        }
+
+        return count($tableNames) === count(array_intersect($tableNames, array_map('strtolower', $this->existsCache)));
     }
 }
